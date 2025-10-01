@@ -1,0 +1,6 @@
+:root {
+}
+
+.healthbar-size {
+    width: 500px;
+}
