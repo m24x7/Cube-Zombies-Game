@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class Controller_Player : Parent_Entity
 {
@@ -10,9 +13,26 @@ public class Controller_Player : Parent_Entity
     [SerializeField] private Collider playerCollider;
     public Collider PlayerCollider => playerCollider;
 
+    [SerializeField] protected LayerMask blockingBuildMask = ~0;
+    [SerializeField] private GameObject blockPrefab;
+    [SerializeField] private GameObject block;
+
+    private int itemInHand = 0;
+
     [SerializeField] private Sword sword;
 
+    // Attack Vars
+    [SerializeField] private float closeAssistRadius = 0.18f;
+    [SerializeField] private float attackCooldown = 0f;
+
     public Action OnHealthChange;
+
+    [SerializeField] private UI_Manager uiManager;
+
+    private int iFrames = 0; // invincibility frames counter
+
+    private int points = 0;
+    public int Points { get => points; set => points = value; }
 
 
     #region Movement
@@ -274,23 +294,102 @@ public class Controller_Player : Parent_Entity
     // Update is called once per frame
     void Update()
     {
+        if (_input.pauseGame)
+        {
+            uiManager.TogglePauseMenu();
+            _input.pauseGame = false;
+        }
+
+        if (Time.timeScale == 0f) return;
+
         MoveUpdate();
 
-        if (_input.attack)
+        //Debug.Log("attackInput: " + _input.attack);
+        if (_input.attack && attackCooldown <= 0 && itemInHand == 0)
         {
             Attack();
-            _input.attack = false; // prevent multiple attack inputs
+            //_input.attack = false; // prevent multiple attack inputs
+
+            attackCooldown = sword.SwingSpeed; //* Time.fixedDeltaTime;
+            //Debug.Log("Attack initiated. Cooldown set to: " + attackCooldown);
+        }
+
+        if (_input.useItem && itemInHand == 1)
+        {
+            placeBlock();
+            _input.useItem = false;
+        }
+
+        if (_input.swapSword)
+        {
+            itemInHand = 0;
+            _input.swapSword = false;
+
+            _input.attack = false;
+            _input.useItem = false;
+        }
+
+        if (_input.swapBlock)
+        {
+            itemInHand = 1;
+            _input.swapBlock = false;
+
+            _input.attack = false;
+            _input.useItem = false;
+        }
+
+
+        switch (itemInHand)
+        {
+            case 0:
+                uiManager.SelectHotbarSlot(0);
+                //buildController.enabled = true;
+                sword.gameObject.GetComponent<MeshRenderer>().enabled = true;
+                block.gameObject.GetComponent<MeshRenderer>().enabled = false;
+                break;
+            case 1:
+                uiManager.SelectHotbarSlot(1);
+                //buildController.enabled = false;
+                sword.gameObject.GetComponent<MeshRenderer>().enabled = false;
+                block.gameObject.GetComponent<MeshRenderer>().enabled = true;
+                break;
+            default:
+                uiManager.SelectHotbarSlot(0);
+                //buildController.enabled = true;
+                sword.gameObject.GetComponent<MeshRenderer>().enabled = false;
+                block.gameObject.GetComponent<MeshRenderer>().enabled = true;
+                break;
         }
     }
 
     private void LateUpdate()
     {
+        if (Time.timeScale == 0f) return;
         CameraRotation();
     }
 
     void FixedUpdate()
     {
+        if (iFrames > 0)
+            iFrames--;
 
+        if (attackCooldown > 0)
+        {
+            attackCooldown--;
+            //Debug.Log("Attack cooldown: " + attackCooldown);
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        var enemy = collision.collider.GetComponentInParent<TestEnemyController>();
+
+        if (enemy != null && iFrames <= 0)
+        {
+            // Take damage over time while in contact with enemy
+            TakeDamage(1);
+            iFrames = 20; // Set invincibility frames (e.g., 20 frames)
+        }
     }
 
     override public void Heal(int heal)
@@ -305,20 +404,148 @@ public class Controller_Player : Parent_Entity
         base.TakeDamage(damage);
 
         OnHealthChange?.Invoke();
+
+        if (health.Cur <= 0) Die();
     }
 
     override protected void Die()
     {
-        Debug.Log("Player Died");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        //Debug.Log("Player Died");
         // Add death logic here (e.g., respawn, game over screen, etc.)
+    }
+
+    private void placeBlock()
+    {
+        BlockPlacer.TryPlaceBlockFromCamera(Camera.main, 5f, blockingBuildMask, blockPrefab);
     }
 
     override public void Attack()
     {
-        if (sword == null) return;
-        if (attackCoroutine != null) return;        // gate: don't stack attacks
-        attackCoroutine = StartCoroutine(AttackRoutine());
+        ////if (sword == null) return;
+        ////if (attackCoroutine != null) return;        // gate: don't stack attacks
+        ////attackCoroutine = StartCoroutine(AttackRoutine());
+
+        //if (sword == null) return;
+
+        //Debug.Log("Player Attack: Swinging sword");
+
+        //// Aim from the CAMERA so pitch matches your crosshair
+        //var cam = Camera.main;
+        //Vector3 origin = cam ? cam.transform.position : transform.position + Vector3.up * 1.5f;
+        //Vector3 direction = cam ? cam.transform.forward : transform.forward;
+
+        //// Nudge origin forward so we start outside our own capsule
+        //origin += direction * 0.51f;
+
+        //// Visual debug
+        //Debug.DrawRay(origin, direction * sword.Range, Color.red, 0.15f);
+
+        //// Use a tiny sphere to be forgiving at close range
+        //const float radius = 0.05f;
+
+        //// TEMP: hit everything while debugging. When working, replace with a proper mask.
+        ////int mask = ~0;
+
+        //RaycastHit[] hits = Physics.SphereCastAll(
+        //    origin,
+        //    radius,
+        //    direction,
+        //    sword.Range,
+        //    attackMask,
+        //    QueryTriggerInteraction.Ignore // change to Collide if your enemy colliders are triggers
+        //);
+
+        //Debug.Log("Player Attack: Hit " + hits.Length + " things.");
+
+        //if (hits == null || hits.Length == 0) return;
+
+        //Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
+        //foreach (var hit in hits)
+        //{
+        //    // Robust self-filter: skip anything under our own root
+        //    if (hit.collider && hit.collider.transform.root == transform.root)
+        //        continue;
+
+        //    // Damage the first enemy we touch, then stop
+        //    var enemy = hit.collider.GetComponentInParent<Parent_Entity>();
+        //    if (enemy != null)
+        //    {
+        //        enemy.TakeDamage(sword.Damage);
+        //        return;
+        //    }
+
+        //    //// Any solid non-enemy blocks the shot
+        //    //if (!hit.collider.isTrigger)
+        //    //    return;
+        //}
+
+        //if (!playerCamera) return; // cache/assign in Awake or Inspector
+        //float R = (sword != null ? sword.Range : range);
+
+        // Build a ray from the screen center (your crosshair)
+        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+
+        // Nudge origin slightly forward so it starts outside your head/capsule
+        ray.origin += ray.direction * 0.06f;
+
+        // 1) Precise thin ray first (long-range)
+        if (TryHitScan(ray, sword.Range, 0f, out var hit))
+        {
+            ApplyHit(hit);
+            return;
+        }
+
+        // 2) Close-range assist (small sphere) if the thin ray missed
+        if (TryHitScan(ray, sword.Range, closeAssistRadius, out hit))
+        {
+            ApplyHit(hit);
+            return;
+        }
+
+        // No hit
     }
+
+    private bool TryHitScan(Ray ray, float range, float radius, out RaycastHit firstValid)
+    {
+        firstValid = default;
+
+        RaycastHit[] hits = (radius > 0f)
+            ? Physics.SphereCastAll(ray, radius, range, attackMask, QueryTriggerInteraction.Collide)
+            : Physics.RaycastAll(ray, range, attackMask, QueryTriggerInteraction.Collide);
+
+        if (hits == null || hits.Length == 0) return false;
+
+        //Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
+        foreach (var h in hits)
+        {
+            // Robust self-filter: ignore anything under our own root (covers weapon arms, etc.)
+            if (h.collider && h.collider.transform.root == transform.root)
+                continue;
+
+            // Enemy?
+            if (h.collider.GetComponentInParent<TestEnemyController>() != null)
+            {
+                firstValid = h;
+                return true;
+            }
+
+            // Solid non-enemy blocks the shot path
+            if (!h.collider.isTrigger)
+                return false;
+        }
+        return false;
+    }
+
+    private void ApplyHit(RaycastHit hit)
+    {
+        var enemy = hit.collider.GetComponentInParent<Parent_Entity>();
+        if (enemy != null)
+            enemy.TakeDamage(sword != null ? sword.Damage : 10);
+    }
+
     override protected IEnumerator AttackRoutine()
     {
         // (Optional) play windup animation/sound here
@@ -340,22 +567,26 @@ public class Controller_Player : Parent_Entity
     }
     private void DoAttackRaycast()
     {
-        // Origin/direction from your existing setup
-        Vector3 origin = transform.position;
-        origin.y += 1.375f; // adjust to approximate player "eye" height
-        Vector3 direction = transform.forward;
+        Debug.Log("Player Attack: Swinging sword");
+
+        //// Origin/direction from your existing setup
+        //Vector3 origin = transform.position;
+        //origin.y += 1.375f; // adjust to approximate player "eye" height
+        //Vector3 direction = Camera.main.transform.forward;
 
         // Visualize shot
-        Debug.DrawRay(origin, direction * sword.Range, Color.red, 0.1f);
+        Debug.DrawRay(transform.position + new Vector3(0f, 1.375f, 0f), Camera.main.transform.forward * sword.Range, Color.red, 0.1f);
 
         // First-hit logic that respects blockers (walls)
         var hits = Physics.RaycastAll(
-            origin,
-            direction,
+            transform.position + new Vector3(0f, 1.375f, 0f),
+            Camera.main.transform.forward,
             sword.Range,
-            attackMask,
+            ~0, //attackMask,
             QueryTriggerInteraction.Ignore
         );
+
+        Debug.Log("Player Attack: Hit " + hits.Length + " things.");
 
         if (hits == null || hits.Length == 0) return;
 
@@ -364,7 +595,7 @@ public class Controller_Player : Parent_Entity
         foreach (var hit in hits)
         {
             // Skip self
-            if (hit.collider == playerCollider) continue;
+            if (hit.collider == playerCollider || hit.collider.transform.root == transform.root) continue;
 
             var enemy = hit.collider.GetComponentInParent<Parent_Entity>();
             if (enemy != null)

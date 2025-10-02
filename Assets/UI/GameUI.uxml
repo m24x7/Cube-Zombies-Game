@@ -1,10 +1,18 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/GameUIStyle.uss?fileID=7433441132597879392&amp;guid=a415da5ad0390d34fbae29ecb37e8e50&amp;type=3#GameUIStyle" />
-    <ui:VisualElement name="HealthBar" class="healthbar-size" style="flex-grow: 1; position: absolute; height: 150px; -unity-background-image-tint-color: rgb(255, 255, 255); background-color: rgba(127, 127, 127, 0.5); margin-left: 25px; margin-top: 25px; margin-bottom: 25px; margin-right: 25px;">
-        <ui:VisualElement name="TempBG" class="healthbar-size" style="position: absolute; margin-left: 20px; margin-top: 20px; margin-right: 20px; margin-bottom: 20px; background-color: rgba(0, 0, 0, 0); width: 92%; height: 73.333%;" />
-        <ui:VisualElement name="HealthBarMask" style="flex-grow: 1; position: absolute; height: 100%; overflow: hidden; width: 103%; transition-property: width; transition-duration: 0.5s; transition-timing-function: ease-out-bounce;">
-            <ui:VisualElement name="HealthBarFill" class="healthbar-size" style="flex-grow: 1; position: absolute; background-color: rgb(127, 0, 0); height: 100%; overflow: visible;" />
+    <ui:VisualElement name="HealthBar" class="healthbar-size" style="flex-grow: 1; position: absolute; height: 150px; -unity-background-image-tint-color: rgb(255, 255, 255); background-color: rgba(127, 127, 127, 0.78); margin-left: 25px; margin-top: 25px; margin-bottom: 25px; margin-right: 25px;">
+        <ui:VisualElement name="HealthBarMask" enabled="true" style="flex-grow: 1; position: absolute; height: 100%; overflow: hidden; width: 100%; transition-property: width; transition-duration: 0.5s; transition-timing-function: ease-out-bounce;">
+            <ui:VisualElement name="HealthBarFill" enabled="true" class="healthbar-size" style="flex-grow: 1; position: absolute; background-color: rgb(127, 0, 0); height: 100%; overflow: visible;" />
         </ui:VisualElement>
-        <ui:Label text="Label" name="HealthLabel" style="position: absolute; width: 100%; height: 100%; -unity-text-align: middle-left; margin-left: 25px; margin-top: 0; margin-right: 0; margin-bottom: 0; font-size: 30px;" />
+        <ui:Label text="Health" name="HealthLabel" style="position: absolute; width: 100%; height: 100%; margin-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; padding-left: 25px; font-size: 30px; -unity-text-align: middle-left;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="ScoreBoard" style="flex-grow: 0; position: absolute; top: auto; left: auto; margin-top: 25px; margin-bottom: 25px; margin-left: 25px; margin-right: 25px; background-color: rgba(255, 255, 255, 0.5); width: 300px; height: 75px; align-items: center; justify-content: center; align-self: center; align-content: center; right: auto; transform-origin: center; bottom: auto;">
+        <ui:Label text="Score" name="ScoreLabel" style="font-size: 30px;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="PauseMenu" enabled="true" style="flex-grow: 0; position: absolute; top: auto; left: auto; right: auto; bottom: auto; background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 100%; align-items: center; opacity: 0.5;">
+        <ui:Label text="Pause Menu" name="PauseMenuTitle" enabled="true" style="width: 1000px; height: 150px; font-size: 150px; -unity-text-align: middle-center; margin-top: 25px; margin-left: 25px; margin-bottom: 25px; margin-right: 25px; -unity-font-style: bold; top: 100px;" />
+        <ui:Button text="Resume" name="Resume" style="top: 136px; width: 500px; height: 150px; font-size: 90%;" />
+        <ui:Button text="Main Menu" name="MainMenu" enabled="false" style="top: 156px; width: 500px; height: 150px; font-size: 90%; -unity-font-style: normal;" />
+        <ui:Button text="Quit" name="Quit" style="top: 176px; width: 500px; height: 150px; font-size: 90%;" />
     </ui:VisualElement>
 </ui:UXML>

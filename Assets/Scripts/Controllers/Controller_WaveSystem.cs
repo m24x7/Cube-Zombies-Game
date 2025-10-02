@@ -10,6 +10,8 @@ public class Controller_WaveSystem : MonoBehaviour
     [SerializeField] private Transform player;         // for EnemyChasePlayer
     //[SerializeField] private BuildCurrency currency;   // your existing bank
     //[SerializeField] private BuildPhaseManager phase;  // your existing phase gate
+    [SerializeField] private UI_Manager uiManager;
+    [SerializeField] private Controller_QuestUI questUI;
 
     [Header("Spawn Points")]
     [SerializeField] private List<SpawnPoint> spawnPoints = new();
@@ -33,6 +35,8 @@ public class Controller_WaveSystem : MonoBehaviour
 
     // Runtime
     public int CurrentWaveNumber { get; private set; } = 0; // 1-based
+    public int TotalWavesDefined => waveSequence.Count;
+    public int WavesRemaining => Mathf.Max(0, waveSequence.Count - CurrentWaveNumber);
     public int EnemiesAlive { get; private set; } = 0;
     public int EnemiesToSpawnThisWave { get; private set; } = 0;
     public int EnemiesSpawnedThisWave { get; private set; } = 0;
@@ -70,11 +74,15 @@ public class Controller_WaveSystem : MonoBehaviour
     public void StartNextWave()
     {
         if (waveRoutine != null) StopCoroutine(waveRoutine);
+        uiManager.UpdateWave();
+        if (WavesRemaining == 0) questUI.Quests[0].GetComponent<Quest>().CompleteObjective();
         waveRoutine = StartCoroutine(RunWave());
     }
 
     IEnumerator RunWave()
     {
+        //if (WavesRemaining == 0) questUI.Quests[0].GetComponent<Quest>().CompleteObjective();
+        
         CurrentWaveNumber++;
         var spec = GetWaveSpec(CurrentWaveNumber);
 
@@ -188,7 +196,7 @@ public class Controller_WaveSystem : MonoBehaviour
         }
 
         // Procedural fallback (endless)
-        if (endlessBeyondLastDefined && fallbackEnemy)
+        if (endlessBeyondLastDefined && fallbackEnemy != null)
         {
             int n = waveNumber - waveSequence.Count; // 1..∞ after authored waves
             var count = Mathf.Max(1, fallbackStartCount + (n - 1) * fallbackAddPerWave);
@@ -280,5 +288,8 @@ public class Controller_WaveSystem : MonoBehaviour
     {
         EnemiesAlive = Mathf.Max(0, EnemiesAlive - 1);
         //if (currency) currency.Add(e.reward);
+
+        player.GetComponent<Controller_Player>().Points += e.reward;
+        uiManager.UpdateScore();
     }
 }

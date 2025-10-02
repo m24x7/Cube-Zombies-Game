@@ -7,4 +7,7 @@ public class Sword : MonoBehaviour
 
     [SerializeField] private float range = 1.5f;
     public float Range { get { return range; } }
+
+    [SerializeField] private float swingSpeed = 20f;
+    public float SwingSpeed { get { return swingSpeed; } }
 }

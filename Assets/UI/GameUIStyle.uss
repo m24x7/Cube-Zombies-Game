@@ -2,5 +2,5 @@
 }
 
 .healthbar-size {
-    width: 500px;
+    width: 350px;
 }

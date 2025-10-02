@@ -9,6 +9,10 @@ public class Inputs : MonoBehaviour
     public bool jump;
     public bool sprint;
     public bool attack;
+    public bool useItem;
+    public bool swapSword;
+    public bool swapBlock;
+    public bool pauseGame;
 
     [Header("Movement Settings")]
     public bool analogMovement;
@@ -45,6 +49,23 @@ public class Inputs : MonoBehaviour
     {
         AttackInput(value.isPressed);
     }
+
+    public void OnUseItem(InputValue value)
+    {
+        UseItemInput(value.isPressed);
+    }
+    public void OnSwapSword(InputValue value)
+    {
+        SwapSword(value.isPressed);
+    }
+    public void OnSwapBlock(InputValue value)
+    {
+        SwapBlock(value.isPressed);
+    }
+    public void OnPauseGame(InputValue value)
+    {
+        PauseGame(value.isPressed);
+    }
 #endif
 
 
@@ -71,6 +92,22 @@ public class Inputs : MonoBehaviour
     public void AttackInput(bool newAttackState)
     {
         attack = newAttackState;
+    }
+    public void UseItemInput(bool newUseItemState)
+    {
+        useItem = newUseItemState;
+    }
+    public void SwapSword(bool newSwordState)
+    {
+        swapSword = newSwordState;
+    }
+    public void SwapBlock(bool newBlockState)
+    {
+        swapBlock = newBlockState;
+    }
+    public void PauseGame(bool newPauseState)
+    {
+        pauseGame = newPauseState;
     }
 
     private void OnApplicationFocus(bool hasFocus)
