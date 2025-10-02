@@ -5,6 +5,6 @@
         <ui:VisualElement name="HealthBarMask" style="flex-grow: 1; position: absolute; height: 100%; overflow: hidden; width: 103%; transition-property: width; transition-duration: 0.5s; transition-timing-function: ease-out-bounce;">
             <ui:VisualElement name="HealthBarFill" class="healthbar-size" style="flex-grow: 1; position: absolute; background-color: rgb(127, 0, 0); height: 100%; overflow: visible;" />
         </ui:VisualElement>
-        <ui:Label text="Label" name="HealthLabel" style="position: absolute; width: 100%; height: 100%; -unity-text-align: middle-left; margin-left: 25px; margin-top: 0; margin-right: 0; margin-bottom: 0; font-size: 30px; -unity-text-outline-color: rgba(255, 255, 255, 0); -unity-text-outline-width: 1px; text-shadow: 0 0 0 rgb(255, 255, 255);" />
+        <ui:Label text="Label" name="HealthLabel" style="position: absolute; width: 100%; height: 100%; -unity-text-align: middle-left; margin-left: 25px; margin-top: 0; margin-right: 0; margin-bottom: 0; font-size: 30px;" />
     </ui:VisualElement>
 </ui:UXML>

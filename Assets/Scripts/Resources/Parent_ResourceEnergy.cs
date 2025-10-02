@@ -10,6 +10,12 @@ public class Parent_ResourceEnergy : MonoBehaviour
     [SerializeField] private int cur = -1;
     public int Cur { get => cur; set => cur = value; }
 
+    public void Init(int x)
+    {
+        max = x;
+        cur = max;
+    }
+
     protected void Awake()
     {
         cur = max;

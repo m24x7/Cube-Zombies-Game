@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Enemy_Zombie
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDefinition
   id: zombie_basic
-  prefab: {fileID: 0}
+  prefab: {fileID: 5748213487762348890, guid: ffe533a1845372d4f8f860d9ddba3223, type: 3}
   baseHealth: 100
   baseSpeed: 3
   killReward: 50
