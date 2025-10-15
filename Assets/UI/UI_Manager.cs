@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class UI_Manager : MonoBehaviour
@@ -18,6 +19,14 @@ public class UI_Manager : MonoBehaviour
     private Button resumeButton;
     private Button mainMenuButton;
     private Button quitButton;
+
+    // Main Menu UI Toolkit Variables
+    [SerializeField] private GameObject MainMenuUI_UIToolKit;
+    [SerializeField] private UIDocument MainMenuUIDoc;
+    private Button playButton;
+    private Button instructionsButton;
+    private Button gradingButton;
+    private Button creditsButton;
 
     // TextMeshPro Variables
     [SerializeField] private GameObject GameUI_TextMeshPro;
@@ -104,7 +113,7 @@ public class UI_Manager : MonoBehaviour
         else
         {
             pauseMenu.SetEnabled(true);
-            pauseMenu.style.opacity = 0.5f;
+            pauseMenu.style.opacity = 1f;
 
             Time.timeScale = 0f;
 
@@ -127,10 +136,10 @@ public class UI_Manager : MonoBehaviour
     }
     private void MainMenuButton()
     {
-        // Load Main Menu Scene
+        SceneManager.LoadScene("MainMenu");
     }
     private void QuitButton()
     {
-               Application.Quit();
+        Application.Quit();
     }
 }

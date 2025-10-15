@@ -403,7 +403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ScrollRect
   m_Content: {fileID: 71351447}
-  m_Horizontal: 0
+  m_Horizontal: 1
   m_Vertical: 1
   m_MovementType: 1
   m_Elasticity: 0.1
@@ -609,7 +609,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 815688889}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -618,7 +618,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 30.000065, y: -439.99994}
+  m_AnchoredPosition: {x: 0, y: -390}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &815688891
@@ -641,17 +641,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Controls:\r\n    WASD for movement\r\n    Space for jump\r\n    Left Shift
-    to sprint\r\n    Esc for Pause Menu (which includes the quit button)\r\n    1
-    to equip the \"sword\"\r\n    Left Click to attack while the sword is equipped\r\n   
-    2 to equip the \"building block\"\r\n    Right Click to place blocks while the
-    building block is equipped\r\n\r\nHow To Play\r\n    Use the sword to defeat
-    enemies and the building block to alter the environment.\r\n    Currently, there
-    is one wave to play. This wave spawns in 10 test enemies that take 5 hits to
-    defeat. There is a bug that if you sit there long enough after the wave is over,
-    it may start another one. I'm debating if I want it to be like CoD: Zombies where
-    it is designed to be endless, or if I want to cut the player off once they complete
-    a certain amount of waves."
+  m_text: 'Font Asset: Kenny Pixel, https://kenney.nl/assets/kenney-fonts'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 41cd41d571441cb42a0901515984eebb, type: 2}
   m_sharedMaterial: {fileID: -2907957827466600840, guid: 41cd41d571441cb42a0901515984eebb, type: 2}
@@ -679,12 +669,12 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4294967295
   m_fontSize: 72
-  m_fontSizeBase: 50
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -716,7 +706,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 48.621643, z: 55.560974, w: 0}
+  m_margin: {x: 28.951294, y: 106.797455, z: 25.35614, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
