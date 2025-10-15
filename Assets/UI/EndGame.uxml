@@ -1,0 +1,23 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="EndMenu" style="flex-grow: 1; width: 1186px;">
+        <ui:VisualElement name="Title" style="flex-grow: 1; width: 893px; position: relative; top: 182px; left: auto; right: auto; bottom: auto; align-self: flex-start; align-content: flex-start; align-items: stretch; height: auto; flex-direction: column;">
+            <ui:Label text="End Text" name="EndText" style="font-size: 200px; -unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/Kenney%20Pixel.ttf?fileID=12800000&amp;guid=f8c49611103b4224fbb4f3cd9724f1ea&amp;type=3#Kenney Pixel&quot;); -unity-text-align: middle-center; position: absolute; top: auto; align-self: center;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Buttons" style="flex-grow: 1; width: 893px; align-items: center; top: 473px; position: absolute;">
+            <ui:Button text="Replay" name="Replay" selectable="false" focusable="false" style="font-size: 100%; -unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/Kenney%20Pixel.ttf?fileID=12800000&amp;guid=f8c49611103b4224fbb4f3cd9724f1ea&amp;type=3#Kenney Pixel&quot;); width: 425px; border-bottom-width: 5px;" />
+            <ui:Button text="Main Menu" name="MainMenu" selectable="false" focusable="false" style="font-size: 100%; -unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/Kenney%20Pixel.ttf?fileID=12800000&amp;guid=f8c49611103b4224fbb4f3cd9724f1ea&amp;type=3#Kenney Pixel&quot;); width: 425px; border-bottom-width: 5px;" />
+            <ui:Button text="Quit" name="Quit" selectable="false" focusable="false" style="-unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/Kenney%20Pixel.ttf?fileID=12800000&amp;guid=f8c49611103b4224fbb4f3cd9724f1ea&amp;type=3#Kenney Pixel&quot;); font-size: 100%; width: 425px; border-top-width: 0;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="Stats" style="flex-grow: 1; position: absolute; height: 334px; width: 1019px; top: 466px; left: 835px;">
+        <ui:VisualElement name="Wave" style="flex-grow: 1;">
+            <ui:Label text="Waves completed: x of y" name="WavesSurvived" style="-unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/Kenney%20Pixel.ttf?fileID=12800000&amp;guid=f8c49611103b4224fbb4f3cd9724f1ea&amp;type=3#Kenney Pixel&quot;); font-size: 100%;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Time" style="flex-grow: 1;">
+            <ui:Label text="Time: xx:xx" name="TimeSurvived" style="-unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/Kenney%20Pixel.ttf?fileID=12800000&amp;guid=f8c49611103b4224fbb4f3cd9724f1ea&amp;type=3#Kenney Pixel&quot;); font-size: 100%;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Score" style="flex-grow: 1;">
+            <ui:Label text="Score: x out of y" name="ScoreText" style="font-size: 100%; -unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/Kenney%20Pixel.ttf?fileID=12800000&amp;guid=f8c49611103b4224fbb4f3cd9724f1ea&amp;type=3#Kenney Pixel&quot;);" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

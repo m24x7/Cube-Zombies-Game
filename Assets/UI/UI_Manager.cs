@@ -28,6 +28,21 @@ public class UI_Manager : MonoBehaviour
     private Button gradingButton;
     private Button creditsButton;
 
+    // End Game UI Toolkit Variables
+    [SerializeField] private GameObject EndGameUI_UIToolKit;
+    [SerializeField] private UIDocument EndGameUIDoc;
+    private VisualElement endMenu;
+    private VisualElement stats;
+    private Button restartButton;
+    private Button endMainMenuButton;
+    private Button endQuitButton;
+    private Label endText;
+    private Label waveText;
+    private Label timeText;
+    private Label scoreText;
+
+    private float secondsSurvived = 0f;
+
     // TextMeshPro Variables
     [SerializeField] private GameObject GameUI_TextMeshPro;
     [SerializeField] private TextMeshProUGUI WaveTMP;
@@ -41,7 +56,7 @@ public class UI_Manager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (MainMenuUI_UIToolKit != null)
+        if (MainMenuUIDoc != null)
         {
             // Set UI Toolkit Vars
             playButton = MainMenuUIDoc.rootVisualElement.Q<Button>("Play");
@@ -58,7 +73,7 @@ public class UI_Manager : MonoBehaviour
             quitButton.clicked += QuitButton;
         }
 
-            if (GameUI_UIToolKit != null)
+        if (EndGameUIDoc != null)
         {
             // Set UI Toolkit Vars
             healthLabel = UIDoc.rootVisualElement.Q<Label>("HealthLabel");
@@ -74,7 +89,16 @@ public class UI_Manager : MonoBehaviour
             mainMenuButton.clicked += MainMenuButton;
             quitButton.clicked += QuitButton;
 
-            PlayerController.OnHealthChange += UpdateHealth;
+            if (PlayerController != null)
+            {
+                PlayerController.OnHealthChange += UpdateHealth;
+                PlayerController.playerDie += ToggleLoseScreen;
+            }
+
+            if (waveSystem != null)
+            {
+                waveSystem.noMoreWaves += ToggleWinScreen;
+            }
 
 
             pauseMenu.SetEnabled(false);
@@ -82,9 +106,35 @@ public class UI_Manager : MonoBehaviour
 
             UpdateHealth();
             UpdateScore();
-            UpdateWave();
         }
 
+        if (EndGameUIDoc != null)
+        {
+            // Set UI Toolkit Vars
+            endMenu = EndGameUIDoc.rootVisualElement.Q<VisualElement>("EndMenu");
+            stats = EndGameUIDoc.rootVisualElement.Q<VisualElement>("Stats");
+
+            restartButton = EndGameUIDoc.rootVisualElement.Q<Button>("Replay");
+            endMainMenuButton = EndGameUIDoc.rootVisualElement.Q<Button>("MainMenu");
+            endQuitButton = EndGameUIDoc.rootVisualElement.Q<Button>("Quit");
+
+            endText = EndGameUIDoc.rootVisualElement.Q<Label>("EndText");
+            waveText = EndGameUIDoc.rootVisualElement.Q<Label>("WavesSurvived");
+            timeText = EndGameUIDoc.rootVisualElement.Q<Label>("TimeSurvived");
+            scoreText = EndGameUIDoc.rootVisualElement.Q<Label>("ScoreText");
+
+            restartButton.clicked += RestartScene;
+            endMainMenuButton.clicked += MainMenuButton;
+            endQuitButton.clicked += QuitButton;
+
+            endMenu.SetEnabled(false);
+            endMenu.style.opacity = 0f;
+
+            stats.SetEnabled(false);
+            stats.style.opacity = 0f;
+        }
+
+        if (WaveTMP != null) UpdateWave();
         if (Hotbar != null)
         {
             slots = Hotbar.transform.childCount;
@@ -117,10 +167,12 @@ public class UI_Manager : MonoBehaviour
 
     public void TogglePauseMenu()
     {
+        if (endMenu.enabledInHierarchy) return;
+
         if (pauseMenu.enabledInHierarchy)
         {
             pauseMenu.SetEnabled(false);
-            pauseMenu.style.opacity = 0;
+            pauseMenu.style.opacity = 0f;
 
             Time.timeScale = 1f;
 
@@ -137,6 +189,45 @@ public class UI_Manager : MonoBehaviour
             UnityEngine.Cursor.visible = true;
             UnityEngine.Cursor.lockState = CursorLockMode.None;
         }
+    }
+
+    public void ToggleEndScreen(bool win)
+    {
+        endMenu.SetEnabled(true);
+        endMenu.style.opacity = 1f;
+
+        stats.SetEnabled(true);
+        stats.style.opacity = 1f;
+
+        EndGameUIDoc.sortingOrder = 10;
+
+        UnityEngine.Cursor.visible = true;
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+
+        if (win)
+        {
+            endText.text = "You Win!";
+        }
+        else
+        {
+            endText.text = "You Lose!";
+        }
+
+        waveText.text = $"Waves Survived: {waveSystem.CurrentWaveNumber - 1} out of {waveSystem.TotalWavesDefined}";
+        timeText.text = $"Time Survived: {Mathf.FloorToInt(secondsSurvived / 60)}m {Mathf.FloorToInt(secondsSurvived % 60)}s";
+        scoreText.text = $"Final Score: {PlayerController.Points} out of {waveSystem.TotalPossiblePoints}";
+
+        Time.timeScale = 0f;
+
+    }
+
+    public void ToggleWinScreen()
+    {
+        ToggleEndScreen(true);
+    }
+    public void ToggleLoseScreen()
+    {
+        ToggleEndScreen(false);
     }
 
     public void SelectHotbarSlot(int slot)
@@ -158,5 +249,15 @@ public class UI_Manager : MonoBehaviour
     private void QuitButton()
     {
         Application.Quit();
+    }
+
+    private void RestartScene()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    private void FixedUpdate()
+    {
+        secondsSurvived += Time.fixedDeltaTime;
     }
 }

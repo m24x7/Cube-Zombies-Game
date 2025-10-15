@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -32,6 +33,10 @@ public class Controller_WaveSystem : MonoBehaviour
     [SerializeField] private float speedPerWave = 1.02f;  // +2% speed per wave
     [SerializeField] private float minSpawnInterval = 0.25f;
     [SerializeField] private float intermissionSeconds = 18f;
+
+    public Action noMoreWaves;
+
+    public int TotalPossiblePoints { get => CalcTotalPosiblePoints(); }
 
     // Runtime
     public int CurrentWaveNumber { get; private set; } = 0; // 1-based
@@ -74,16 +79,29 @@ public class Controller_WaveSystem : MonoBehaviour
     public void StartNextWave()
     {
         if (waveRoutine != null) StopCoroutine(waveRoutine);
+
         uiManager.UpdateWave();
-        if (WavesRemaining == 0) questUI.Quests[0].GetComponent<Quest>().CompleteObjective();
+
+        if (CurrentWaveNumber == waveSequence.Count)
+        {
+            questUI.Quests[0].GetComponent<Quest>().CompleteObjective();
+
+            if (!endlessBeyondLastDefined)
+            {
+                
+                noMoreWaves?.Invoke();
+                return; // no more waves
+            }
+        }
+
+        CurrentWaveNumber++;
+
         waveRoutine = StartCoroutine(RunWave());
     }
 
     IEnumerator RunWave()
     {
         //if (WavesRemaining == 0) questUI.Quests[0].GetComponent<Quest>().CompleteObjective();
-        
-        CurrentWaveNumber++;
         var spec = GetWaveSpec(CurrentWaveNumber);
 
         // Enter combat phase
@@ -230,7 +248,7 @@ public class Controller_WaveSystem : MonoBehaviour
         foreach (var e in list) if (e.count > 0) totalW += e.weight;
         if (totalW <= 0f) return null;
 
-        float r = Random.value * totalW;
+        float r = UnityEngine.Random.value * totalW;
         float acc = 0f;
         for (int i = 0; i < list.Count; i++)
         {
@@ -272,7 +290,7 @@ public class Controller_WaveSystem : MonoBehaviour
         foreach (var s in spawnPoints) total += s ? s.Weight : 0f;
         if (total <= 0f) return null;
 
-        float r = Random.value * total, acc = 0f;
+        float r = UnityEngine.Random.value * total, acc = 0f;
         foreach (var s in spawnPoints)
         {
             if (!s) continue;
@@ -291,5 +309,11 @@ public class Controller_WaveSystem : MonoBehaviour
 
         player.GetComponent<Controller_Player>().Points += e.reward;
         uiManager.UpdateScore();
+    }
+
+    private int CalcTotalPosiblePoints()
+    {
+        if (waveSequence == null || waveSequence.Count == 0) return 0;
+        return waveSequence.Sum(wave => wave.entries.Sum(entry => entry.enemy ? entry.count * entry.enemy.killReward : 0));
     }
 }

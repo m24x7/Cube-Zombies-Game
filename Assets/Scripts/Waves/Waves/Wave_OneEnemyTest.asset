@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 838d91bffa88f6a4fa9bbdde45c8d56d, type: 3}
-  m_Name: Wave_1
+  m_Name: Wave_OneEnemyTest
   m_EditorClassIdentifier: Assembly-CSharp::WaveDefinition
   entries:
   - enemy: {fileID: 11400000, guid: 5e8fd1719710b6741889bdb048e4c547, type: 2}
-    count: 10
+    count: 1
     weight: 0
   spawnIntervalSeconds: 1
-  concurrentAliveCap: 20
+  concurrentAliveCap: 15
   healthMultiplier: 1
   speedMultiplier: 1
   damageMultiplier: 1
-  intermissionSeconds: 5
+  intermissionSeconds: 1

@@ -24,6 +24,7 @@ public class Controller_Player : Parent_Entity
     [SerializeField] private float attackCooldown = 0f;
 
     public Action OnHealthChange;
+    public Action playerDie;
 
     [SerializeField] private UI_Manager uiManager;
 
@@ -429,9 +430,7 @@ public class Controller_Player : Parent_Entity
 
     override protected void Die()
     {
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        //Debug.Log("Player Died");
-        // Add death logic here (e.g., respawn, game over screen, etc.)
+        playerDie?.Invoke();
     }
 
     private void placeBlock()
@@ -441,68 +440,6 @@ public class Controller_Player : Parent_Entity
 
     override public void Attack()
     {
-        ////if (sword == null) return;
-        ////if (attackCoroutine != null) return;        // gate: don't stack attacks
-        ////attackCoroutine = StartCoroutine(AttackRoutine());
-
-        //if (sword == null) return;
-
-        //Debug.Log("Player Attack: Swinging sword");
-
-        //// Aim from the CAMERA so pitch matches your crosshair
-        //var cam = Camera.main;
-        //Vector3 origin = cam ? cam.transform.position : transform.position + Vector3.up * 1.5f;
-        //Vector3 direction = cam ? cam.transform.forward : transform.forward;
-
-        //// Nudge origin forward so we start outside our own capsule
-        //origin += direction * 0.51f;
-
-        //// Visual debug
-        //Debug.DrawRay(origin, direction * sword.Range, Color.red, 0.15f);
-
-        //// Use a tiny sphere to be forgiving at close range
-        //const float radius = 0.05f;
-
-        //// TEMP: hit everything while debugging. When working, replace with a proper mask.
-        ////int mask = ~0;
-
-        //RaycastHit[] hits = Physics.SphereCastAll(
-        //    origin,
-        //    radius,
-        //    direction,
-        //    sword.Range,
-        //    attackMask,
-        //    QueryTriggerInteraction.Ignore // change to Collide if your enemy colliders are triggers
-        //);
-
-        //Debug.Log("Player Attack: Hit " + hits.Length + " things.");
-
-        //if (hits == null || hits.Length == 0) return;
-
-        //Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
-
-        //foreach (var hit in hits)
-        //{
-        //    // Robust self-filter: skip anything under our own root
-        //    if (hit.collider && hit.collider.transform.root == transform.root)
-        //        continue;
-
-        //    // Damage the first enemy we touch, then stop
-        //    var enemy = hit.collider.GetComponentInParent<Parent_Entity>();
-        //    if (enemy != null)
-        //    {
-        //        enemy.TakeDamage(sword.Damage);
-        //        return;
-        //    }
-
-        //    //// Any solid non-enemy blocks the shot
-        //    //if (!hit.collider.isTrigger)
-        //    //    return;
-        //}
-
-        //if (!playerCamera) return; // cache/assign in Awake or Inspector
-        //float R = (sword != null ? sword.Range : range);
-
         // Build a ray from the screen center (your crosshair)
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 

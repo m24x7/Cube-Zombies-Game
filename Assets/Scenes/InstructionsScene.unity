@@ -646,12 +646,8 @@ MonoBehaviour:
     to equip the \"sword\"\r\n    Left Click to attack while the sword is equipped\r\n   
     2 to equip the \"building block\"\r\n    Right Click to place blocks while the
     building block is equipped\r\n\r\nHow To Play\r\n    Use the sword to defeat
-    enemies and the building block to alter the environment.\r\n    Currently, there
-    is one wave to play. This wave spawns in 10 test enemies that take 5 hits to
-    defeat. There is a bug that if you sit there long enough after the wave is over,
-    it may start another one. I'm debating if I want it to be like CoD: Zombies where
-    it is designed to be endless, or if I want to cut the player off once they complete
-    a certain amount of waves."
+    enemies and the building block to alter the environment.\r\n    Complete all
+    waves to win."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 41cd41d571441cb42a0901515984eebb, type: 2}
   m_sharedMaterial: {fileID: -2907957827466600840, guid: 41cd41d571441cb42a0901515984eebb, type: 2}

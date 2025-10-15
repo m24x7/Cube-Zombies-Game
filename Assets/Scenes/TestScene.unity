@@ -194,6 +194,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 298605414}
   m_CullTransparentMesh: 1
+--- !u!1 &321562629
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 321562630}
+  - component: {fileID: 321562631}
+  m_Layer: 0
+  m_Name: EndGame
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &321562630
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 321562629}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1488471362}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &321562631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 321562629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: 7782aeca16b05fc48b75f1f9fa6a7c63, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: b39728445fb55b24c94f91c377df1da7, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1277,7 +1332,7 @@ MonoBehaviour:
   m_PanelSettings: {fileID: 11400000, guid: 7782aeca16b05fc48b75f1f9fa6a7c63, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 808ca79c7ce3a414ba1a233781707a55, type: 3}
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Position: 0
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
@@ -1560,6 +1615,8 @@ MonoBehaviour:
   UIDoc: {fileID: 974154790}
   MainMenuUI_UIToolKit: {fileID: 0}
   MainMenuUIDoc: {fileID: 0}
+  EndGameUI_UIToolKit: {fileID: 321562629}
+  EndGameUIDoc: {fileID: 321562631}
   GameUI_TextMeshPro: {fileID: 1322660715}
   WaveTMP: {fileID: 1925939584}
   Hotbar: {fileID: 992264343}
@@ -2096,6 +2153,7 @@ Transform:
   - {fileID: 1142354421}
   - {fileID: 974154789}
   - {fileID: 1322660719}
+  - {fileID: 321562630}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1618192688
@@ -2831,7 +2889,8 @@ MonoBehaviour:
   - {fileID: 1969549945}
   - {fileID: 1280711933}
   waveSequence:
-  - {fileID: 11400000, guid: ca814ef63974c764da0bb3fa8e023eab, type: 2}
+  - {fileID: 11400000, guid: 6772785698ee6ce4a98ab3ccf77b6808, type: 2}
+  - {fileID: 11400000, guid: 6772785698ee6ce4a98ab3ccf77b6808, type: 2}
   endlessBeyondLastDefined: 0
   fallbackEnemy: {fileID: 11400000, guid: 5e8fd1719710b6741889bdb048e4c547, type: 2}
   fallbackStartCount: 10
