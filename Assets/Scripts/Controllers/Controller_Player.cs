@@ -39,6 +39,9 @@ public class Controller_Player : Parent_Entity
     [SerializeField] private float regenMaxWait = 3f;
     [SerializeField] private float regenWaitTimer = 0f;
 
+    private int healthLost = 0;
+    public int HealthLost { get => healthLost; }
+
     #region Movement
     [Header("Player")]
     [Tooltip("Move speed of the character in m/s")]
@@ -304,6 +307,12 @@ public class Controller_Player : Parent_Entity
             _input.pauseGame = false;
         }
 
+        if (_input.instructions)
+        {
+            uiManager.ToggleInstructions();
+            _input.instructions = false;
+        }
+
         if (Time.timeScale == 0f) return;
 
         MoveUpdate();
@@ -316,12 +325,34 @@ public class Controller_Player : Parent_Entity
 
             attackCooldown = sword.SwingSpeed; //* Time.fixedDeltaTime;
             //Debug.Log("Attack initiated. Cooldown set to: " + attackCooldown);
+
+            string[] attackSounds = new string[2] { "Sounds/Draw Weapon Metal 1-1", "Sounds/Stab 4-1" };
+
+            AudioSource.PlayClipAtPoint(
+                Resources.Load<AudioClip>(attackSounds[UnityEngine.Random.Range(0, attackSounds.Length)]),
+                transform.position,
+                0.5f
+            );
         }
 
         if (_input.useItem && itemInHand == 1)
         {
             placeBlock();
             _input.useItem = false;
+        }
+
+        if (_input.attack && itemInHand == 1)
+        {
+            //if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hitInfo, 5f, LayerMask.NameToLayer("Blocks")))
+            //{
+            //    var blockComp = hitInfo.collider.gameObject;
+            //    if (blockComp != null && blockComp.layer == LayerMask.NameToLayer("Blocks"))
+            //    {
+            //        Destroy(blockComp.gameObject);
+            //    }
+            //}
+            BlockPlacer.TryDestroyBlockFromCamera(Camera.main, 5f, GroundLayers, LayerMask.NameToLayer("Blocks"), transform);
+            _input.attack = false;
         }
 
         if (_input.swapSword)
@@ -422,6 +453,8 @@ public class Controller_Player : Parent_Entity
     override public void TakeDamage(int damage)
     {
         base.TakeDamage(damage);
+
+        healthLost += damage;
 
         OnHealthChange?.Invoke();
 

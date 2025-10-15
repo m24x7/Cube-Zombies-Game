@@ -641,10 +641,17 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Renewable Resource and Performance\n- Performance Metric\n- Renewable
-    Resource: Health\n       Health is used when enemies attack the player.\n      
+  m_text: "Renewable Resource and Performance\n- Performance Metric: Evation Mastery\n      
+    This metric is split into 4 mastery levels: Novice, Adept, Master, and Grandmaster.\n       
+    It is evaluated based on how many times the player gets hit.\n        Currently,
+    getting hit 2 times or less is Grandmaster; 5 times or less is Master, 8 times
+    or less is Adept, and more than 8 is Novice. \n         In game, players can
+    tell when they get hit via the renewable resource: Health.\n         The end
+    screen tells the player what their mastery level is (and some other stats).\n-
+    Renewable Resource: Health\n       Health is used when enemies attack the player.\n      
     Health regenerates over time (1 hp per 0.5 seconds).\n       Taking damage prevents
-    regen (3 second healing delay)."
+    regen (3 second healing delay).\n       Health is displayed to the player via
+    a healthbar."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 41cd41d571441cb42a0901515984eebb, type: 2}
   m_sharedMaterial: {fileID: -2907957827466600840, guid: 41cd41d571441cb42a0901515984eebb, type: 2}

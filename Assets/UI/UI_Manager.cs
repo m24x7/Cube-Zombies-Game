@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -31,6 +32,7 @@ public class UI_Manager : MonoBehaviour
     // End Game UI Toolkit Variables
     [SerializeField] private GameObject EndGameUI_UIToolKit;
     [SerializeField] private UIDocument EndGameUIDoc;
+    private VisualElement endBG;
     private VisualElement endMenu;
     private VisualElement stats;
     private Button restartButton;
@@ -40,6 +42,8 @@ public class UI_Manager : MonoBehaviour
     private Label waveText;
     private Label timeText;
     private Label scoreText;
+    private Label healthLost;
+    private Label healthRank;
 
     private float secondsSurvived = 0f;
 
@@ -73,7 +77,7 @@ public class UI_Manager : MonoBehaviour
             quitButton.clicked += QuitButton;
         }
 
-        if (EndGameUIDoc != null)
+        if (UIDoc != null)
         {
             // Set UI Toolkit Vars
             healthLabel = UIDoc.rootVisualElement.Q<Label>("HealthLabel");
@@ -111,6 +115,7 @@ public class UI_Manager : MonoBehaviour
         if (EndGameUIDoc != null)
         {
             // Set UI Toolkit Vars
+            endBG = EndGameUIDoc.rootVisualElement.Q<VisualElement>("BG");
             endMenu = EndGameUIDoc.rootVisualElement.Q<VisualElement>("EndMenu");
             stats = EndGameUIDoc.rootVisualElement.Q<VisualElement>("Stats");
 
@@ -122,13 +127,18 @@ public class UI_Manager : MonoBehaviour
             waveText = EndGameUIDoc.rootVisualElement.Q<Label>("WavesSurvived");
             timeText = EndGameUIDoc.rootVisualElement.Q<Label>("TimeSurvived");
             scoreText = EndGameUIDoc.rootVisualElement.Q<Label>("ScoreText");
+            healthLost = EndGameUIDoc.rootVisualElement.Q<Label>("HealthLost");
+            healthRank = EndGameUIDoc.rootVisualElement.Q<Label>("HealthRankText");
 
             restartButton.clicked += RestartScene;
             endMainMenuButton.clicked += MainMenuButton;
             endQuitButton.clicked += QuitButton;
 
-            endMenu.SetEnabled(false);
-            endMenu.style.opacity = 0f;
+            endBG.SetEnabled(false);
+            endBG.style.opacity = 0f;
+
+            //endMenu.SetEnabled(false);
+            //endMenu.style.opacity = 0f;
 
             stats.SetEnabled(false);
             stats.style.opacity = 0f;
@@ -193,8 +203,11 @@ public class UI_Manager : MonoBehaviour
 
     public void ToggleEndScreen(bool win)
     {
-        endMenu.SetEnabled(true);
-        endMenu.style.opacity = 1f;
+        endBG.SetEnabled(true);
+        endBG.style.opacity = 1f;
+
+        //endMenu.SetEnabled(true);
+        //endMenu.style.opacity = 1f;
 
         stats.SetEnabled(true);
         stats.style.opacity = 1f;
@@ -216,6 +229,11 @@ public class UI_Manager : MonoBehaviour
         waveText.text = $"Waves Survived: {waveSystem.CurrentWaveNumber - 1} out of {waveSystem.TotalWavesDefined}";
         timeText.text = $"Time Survived: {Mathf.FloorToInt(secondsSurvived / 60)}m {Mathf.FloorToInt(secondsSurvived % 60)}s";
         scoreText.text = $"Final Score: {PlayerController.Points} out of {waveSystem.TotalPossiblePoints}";
+        healthLost.text = $"Health Lost: {PlayerController.HealthLost}";
+        if (PlayerController.HealthLost <= 20) healthRank.text = $"Evasion Mastery: Grand Master";
+        else if (PlayerController.HealthLost <= 50) healthRank.text = $"Evasion Mastery: Master";
+        else if (PlayerController.HealthLost <= 80) healthRank.text = $"Evasion Mastery: Adept";
+        else healthRank.text = $"Evasion Mastery: Novice";
 
         Time.timeScale = 0f;
 
@@ -228,6 +246,53 @@ public class UI_Manager : MonoBehaviour
     public void ToggleLoseScreen()
     {
         ToggleEndScreen(false);
+    }
+
+    public void ToggleInstructions()
+    {
+        ////bool isInstructionsOpen = SceneManager.GetSceneByName("InstructionsScene").isLoaded;
+        ////if (isInstructionsOpen)
+        ////{
+        ////    SceneManager.UnloadSceneAsync("InstructionsScene");
+
+        ////    Time.timeScale = 1f;
+
+        ////    UnityEngine.Cursor.visible = false;
+        ////    UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+
+        ////    return;
+        ////}
+        ////else
+        ////{
+        ////    SceneManager.LoadScene("InstructionsScene", LoadSceneMode.Additive);
+        ////    Time.timeScale = 0f;
+
+        ////    UnityEngine.Cursor.visible = true;
+        ////    UnityEngine.Cursor.lockState = CursorLockMode.None;
+
+        ////    return;
+        ////}
+
+        var instructionsUI = GameObject.FindGameObjectWithTag("InstructionsUI");
+
+        if (instructionsUI != null)
+        {
+            Time.timeScale = 1f;
+
+            UnityEngine.Cursor.visible = false;
+            UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+            Destroy(instructionsUI);
+            return;
+        }
+        else
+        {
+            Time.timeScale = 0f;
+            UnityEngine.Cursor.visible = true;
+            UnityEngine.Cursor.lockState = CursorLockMode.None;
+            var instructions = Instantiate(Resources.Load("Instructions"));
+            instructions.GetComponent<Canvas>().sortingOrder = 20;
+            return;
+        }
     }
 
     public void SelectHotbarSlot(int slot)

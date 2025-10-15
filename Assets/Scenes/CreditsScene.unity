@@ -641,7 +641,19 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Font Asset: Kenny Pixel, https://kenney.nl/assets/kenney-fonts'
+  m_text: 'Font Asset: Kenny Pixel, https://kenney.nl/assets/kenney-fonts
+
+
+    Wall
+    and Floor Materials: Grid Prototype Materials, https://assetstore.unity.com/packages/2d/textures-materials/grid-prototype-materials-214264
+
+
+    Block
+    place and destroy audio: Kenny impact sounds, https://kenney.nl/assets/impact-sounds
+
+
+    Sword
+    & enemy audio: 50 Free Game Sounds Pack, https://www.fab.com/listings/b8cc7270-5e0c-4ef7-a277-6a1d4b69358d'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 41cd41d571441cb42a0901515984eebb, type: 2}
   m_sharedMaterial: {fileID: -2907957827466600840, guid: 41cd41d571441cb42a0901515984eebb, type: 2}

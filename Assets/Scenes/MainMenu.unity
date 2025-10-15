@@ -371,7 +371,7 @@ MonoBehaviour:
   m_PanelSettings: {fileID: 11400000, guid: 7782aeca16b05fc48b75f1f9fa6a7c63, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 861e5e5dece02ec488eb38032830798c, type: 3}
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Position: 0
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
@@ -411,6 +411,8 @@ MonoBehaviour:
   UIDoc: {fileID: 0}
   MainMenuUI_UIToolKit: {fileID: 1828052142}
   MainMenuUIDoc: {fileID: 1828052143}
+  EndGameUI_UIToolKit: {fileID: 0}
+  EndGameUIDoc: {fileID: 0}
   GameUI_TextMeshPro: {fileID: 0}
   WaveTMP: {fileID: 0}
   Hotbar: {fileID: 0}

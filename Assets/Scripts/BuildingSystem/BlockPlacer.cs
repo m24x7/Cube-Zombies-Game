@@ -1,3 +1,4 @@
+﻿using Unity.VisualScripting;
 using UnityEngine;
 
 public class BlockPlacer
@@ -22,7 +23,7 @@ public class BlockPlacer
             RoundAwayFromZero(desiredWorldPos.z)
         );
 
-        // Check occupancy using an OverlapBox at the cube�s center with half-extents ~0.5
+        // Check occupancy using an OverlapBox at the cube’s center with half-extents ~0.5
         Vector3 half = new Vector3(skin, skin, skin);
         bool blocked = Physics.CheckBox(
             snapped, half, Quaternion.identity,
@@ -31,14 +32,24 @@ public class BlockPlacer
 
         if (blocked) return false;
 
+        //Require support: ground directly below OR any face neighbor
+        //if (!HasSupport(snapped, blockingMask, skin))
+        //    return false;
+
         // Place a default cube (1x1x1, centered at 'snapped')
         placedBlock = GameObject.Instantiate(BlockToPlace, snapped, Quaternion.identity);
         //placedBlock.transform.position = snapped;
         //placedBlock.transform.localScale = Vector3.one;
 
         // Optional: put it on a dedicated layer/tag
-        // placedBlock.layer = LayerMask.NameToLayer("Blocks");
+        placedBlock.layer = LayerMask.NameToLayer("Blocks");
         // placedBlock.tag = "Block";
+
+        AudioSource.PlayClipAtPoint(
+            Resources.Load<AudioClip>("Sounds/footstep_grass_003"),
+            snapped,
+            1f
+        );
 
         return true;
     }
@@ -68,13 +79,10 @@ public class BlockPlacer
         {
             // Bias slightly along the normal so we snap onto the intended cell, not inside the surface
             target = hit.point + hit.normal * 0.01f;
-        }
-        else
-        {
-            target = ray.origin + ray.direction * maxDistance;
+            return TryPlaceBlockWorld(target, blockingMask, blockToPlace, skin);
         }
 
-        return TryPlaceBlockWorld(target, blockingMask, blockToPlace, skin);
+        return false;
     }
 
     // --- Helpers ---
@@ -84,5 +92,77 @@ public class BlockPlacer
     {
         float s = Mathf.Sign(v);
         return s * Mathf.Floor(Mathf.Abs(v) + 0.5f);
+    }
+
+    /// <summary>
+    /// Destroys the first "block" the camera is looking at.
+    /// Returns true if a block was destroyed.
+    /// </summary>
+    /// <param name="cam">Player's camera (first-person camera)</param>
+    /// <param name="maxDistance">Max distance to check</param>
+    /// <param name="hitMask">
+    /// Layers the ray should interact with (include Environment + Blocks, exclude Player).
+    /// </param>
+    /// <param name="blocksLayer">Layer index for Blocks (e.g., LayerMask.NameToLayer("Blocks"))</param>
+    /// <param name="playerRoot">Root transform of the player (for self-filtering)</param>
+    public static bool TryDestroyBlockFromCamera(
+        Camera cam,
+        float maxDistance,
+        LayerMask hitMask,
+        int blocksLayer,
+        Transform playerRoot
+    )
+    {
+        if (!cam) return false;
+
+        // Build a ray from the center of the screen (crosshair)
+        Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        // Push origin slightly forward so we don't start inside the player's collider
+        ray.origin += ray.direction * 0.06f;
+
+        // Get every hit along the path, nearest first
+        var hits = Physics.RaycastAll(
+            ray,
+            maxDistance,
+            hitMask,
+            QueryTriggerInteraction.Collide // in case blocks use trigger colliders
+        );
+
+        if (hits == null || hits.Length == 0) return false;
+        System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
+        foreach (var h in hits)
+        {
+            var col = h.collider;
+            if (!col) continue;
+
+            // Skip our own body/weapon colliders
+            if (playerRoot && col.transform.root == playerRoot) continue;
+
+            // If it's on the Blocks layer, destroy it and stop
+            if (col.gameObject.layer == blocksLayer)
+            {
+                // If blocks are nested, destroy the top-level block object.
+                // Adjust this if your block prefab uses a different hierarchy.
+                var blockRoot = col.attachedRigidbody ? col.attachedRigidbody.gameObject : col.transform.root.gameObject;
+                Object.Destroy(blockRoot);
+
+                AudioSource.PlayClipAtPoint(
+                    Resources.Load<AudioClip>("Sounds/footstep_grass_004"),
+                    h.point,
+                    1f
+                );
+
+                return true;
+            }
+
+            // Any solid non-block object blocks line of sight → stop
+            if (!col.isTrigger)
+                return false;
+
+            // Otherwise (it’s a trigger that isn’t a block), keep checking further hits
+        }
+
+        return false;
     }
 }

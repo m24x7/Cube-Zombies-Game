@@ -13,6 +13,7 @@ public class Inputs : MonoBehaviour
     public bool swapSword;
     public bool swapBlock;
     public bool pauseGame;
+    public bool instructions;
 
     [Header("Movement Settings")]
     public bool analogMovement;
@@ -66,6 +67,11 @@ public class Inputs : MonoBehaviour
     {
         PauseGame(value.isPressed);
     }
+
+    public void OnInstructions(InputValue value)
+    {
+        Instructions(value.isPressed);
+    }
 #endif
 
 
@@ -108,6 +114,10 @@ public class Inputs : MonoBehaviour
     public void PauseGame(bool newPauseState)
     {
         pauseGame = newPauseState;
+    }
+    public void Instructions(bool newInstructionsState)
+    {
+        instructions = newInstructionsState;
     }
 
     private void OnApplicationFocus(bool hasFocus)

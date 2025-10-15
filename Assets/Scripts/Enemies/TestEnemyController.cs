@@ -39,6 +39,10 @@ public class TestEnemyController : Parent_Entity
     private static readonly int _ColorID = Shader.PropertyToID("_Color");
     private static readonly int _EmissionID = Shader.PropertyToID("_EmissionColor");
 
+    private float randSoundTimer = 0;
+    private string[] sounds = { "Sounds/Creature 1-21", "Sounds/Zombie 1 - Short 1-01" };
+    private string[] hurtSounds = { "Sounds/Hit Generic 2-1" };
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -53,6 +57,25 @@ public class TestEnemyController : Parent_Entity
         reward = def.killReward;
 
         if (agent) agent.speed = def.baseSpeed * Mathf.Max(0.1f, speedMult);
+
+        randSoundTimer = UnityEngine.Random.Range(0, 10);
+    }
+
+    private void FixedUpdate()
+    {
+        if (randSoundTimer > 0)
+                    {
+            randSoundTimer -= Time.fixedDeltaTime;
+        }
+        else
+        {
+            AudioSource.PlayClipAtPoint(
+                Resources.Load<AudioClip>(sounds[UnityEngine.Random.Range(0, sounds.Length)]),
+                transform.position,
+                0.2f
+            );
+            randSoundTimer = UnityEngine.Random.Range(10, 30);
+        }
     }
 
     public override void TakeDamage(int damage)
@@ -60,6 +83,13 @@ public class TestEnemyController : Parent_Entity
         base.TakeDamage(damage);
         TriggerHitFlash();
         Debug.Log("TestEnemyController: Took " + damage + " damage. Current health: " + Health.Cur);
+
+        // Play hurt sound
+        AudioSource.PlayClipAtPoint(
+            Resources.Load<AudioClip>(hurtSounds[UnityEngine.Random.Range(0, hurtSounds.Length)]),
+            transform.position,
+            0.4f
+        );
     }
 
     protected override void Die()
