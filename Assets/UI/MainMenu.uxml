@@ -1,3 +1,15 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="Title" style="flex-grow: 1;" />
+    <ui:VisualElement name="MainMenu" style="flex-grow: 1; width: 1186px;">
+        <ui:VisualElement name="Title" style="flex-grow: 1; width: 893px; position: absolute; top: auto; left: auto; right: auto; bottom: auto; align-self: flex-start; align-content: flex-start; align-items: stretch; height: auto; flex-direction: column;">
+            <ui:Label text="Call of Block" name="TitleText" style="font-size: 200px; -unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/Kenney%20Pixel.ttf?fileID=12800000&amp;guid=f8c49611103b4224fbb4f3cd9724f1ea&amp;type=3#Kenney Pixel&quot;); -unity-text-align: middle-center;" />
+            <ui:Label text="Zombies" name="SubTitleText" style="-unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/Kenney%20Pixel.ttf?fileID=12800000&amp;guid=f8c49611103b4224fbb4f3cd9724f1ea&amp;type=3#Kenney Pixel&quot;); font-size: 124px; -unity-text-align: middle-center; width: auto; align-self: center;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Buttons" style="flex-grow: 1; width: 893px; align-items: center; top: 365px; position: absolute;">
+            <ui:Button text="Play" name="Play" style="font-size: 100%; -unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/Kenney%20Pixel.ttf?fileID=12800000&amp;guid=f8c49611103b4224fbb4f3cd9724f1ea&amp;type=3#Kenney Pixel&quot;); width: 425px; border-bottom-width: 5px;" />
+            <ui:Button text="Instructions" name="Instructions" style="-unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/Kenney%20Pixel.ttf?fileID=12800000&amp;guid=f8c49611103b4224fbb4f3cd9724f1ea&amp;type=3#Kenney Pixel&quot;); font-size: 100%; width: 425px; border-bottom-width: 5px;" />
+            <ui:Button text="Grading" name="Grading" style="-unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/Kenney%20Pixel.ttf?fileID=12800000&amp;guid=f8c49611103b4224fbb4f3cd9724f1ea&amp;type=3#Kenney Pixel&quot;); font-size: 100%; width: 425px; border-bottom-width: 5px;" />
+            <ui:Button text="Credits" name="Credits" style="-unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/Kenney%20Pixel.ttf?fileID=12800000&amp;guid=f8c49611103b4224fbb4f3cd9724f1ea&amp;type=3#Kenney Pixel&quot;); font-size: 100%; width: 425px; border-bottom-width: 5px;" />
+            <ui:Button text="Quit" name="Quit" style="-unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/Kenney%20Pixel.ttf?fileID=12800000&amp;guid=f8c49611103b4224fbb4f3cd9724f1ea&amp;type=3#Kenney Pixel&quot;); font-size: 100%; width: 425px; border-top-width: 0;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
 </ui:UXML>

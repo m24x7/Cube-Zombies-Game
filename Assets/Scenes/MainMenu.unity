@@ -409,8 +409,8 @@ MonoBehaviour:
   PlayerController: {fileID: 0}
   GameUI_UIToolKit: {fileID: 0}
   UIDoc: {fileID: 0}
-  MainMenuUI_UIToolKit: {fileID: 0}
-  MainMenuUIDoc: {fileID: 0}
+  MainMenuUI_UIToolKit: {fileID: 1828052142}
+  MainMenuUIDoc: {fileID: 1828052143}
   GameUI_TextMeshPro: {fileID: 0}
   WaveTMP: {fileID: 0}
   Hotbar: {fileID: 0}

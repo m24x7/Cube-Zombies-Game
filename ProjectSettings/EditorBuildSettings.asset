@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/GradingScene.unity
     guid: b5b2b16737a76d1479849abda2fb04d0
   - enabled: 1
+    path: Assets/Scenes/CreditsScene.unity
+    guid: fc27e3c498546ec4994cc88f5db03933
+  - enabled: 1
     path: Assets/Scenes/TestScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:

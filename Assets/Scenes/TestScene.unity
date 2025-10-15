@@ -2175,6 +2175,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7094102404468716473, guid: 527fd03a1d44f0c4c97bbd8723b20291, type: 3}
     - target: {fileID: 8858305769974749180, guid: 0b04181a75650824aaf6100184bac517, type: 3}
+      propertyPath: regenMaxWait
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8858305769974749180, guid: 0b04181a75650824aaf6100184bac517, type: 3}
+      propertyPath: regenCooldown
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8858305769974749180, guid: 0b04181a75650824aaf6100184bac517, type: 3}
       propertyPath: attackMask.m_Bits
       value: 513
       objectReference: {fileID: 0}

@@ -32,6 +32,11 @@ public class Controller_Player : Parent_Entity
     private int points = 0;
     public int Points { get => points; set => points = value; }
 
+    // Regen Vars
+    [SerializeField] private int regenAmount = 1;
+    [SerializeField] private float regenCooldown = 0.5f;
+    [SerializeField] private float regenMaxWait = 3f;
+    [SerializeField] private float regenWaitTimer = 0f;
 
     #region Movement
     [Header("Player")]
@@ -376,6 +381,19 @@ public class Controller_Player : Parent_Entity
             attackCooldown--;
             //Debug.Log("Attack cooldown: " + attackCooldown);
         }
+
+        if (regenWaitTimer > 0f)
+        {
+            regenWaitTimer -= Time.fixedDeltaTime;
+        }
+        else
+        {
+            if (health.Cur < health.Max)
+            {
+                Heal(regenAmount);
+                regenWaitTimer = regenCooldown;
+            }
+        }
     }
 
     private void OnCollisionStay(Collision collision)
@@ -385,8 +403,11 @@ public class Controller_Player : Parent_Entity
         if (enemy != null && iFrames <= 0)
         {
             // Take damage over time while in contact with enemy
-            TakeDamage(1);
+            TakeDamage(10);
             iFrames = 20; // Set invincibility frames (e.g., 20 frames)
+
+            // Set regen wait timer
+            regenWaitTimer = regenMaxWait;
         }
     }
 
@@ -408,7 +429,7 @@ public class Controller_Player : Parent_Entity
 
     override protected void Die()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         //Debug.Log("Player Died");
         // Add death logic here (e.g., respawn, game over screen, etc.)
     }

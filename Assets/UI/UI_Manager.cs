@@ -41,7 +41,24 @@ public class UI_Manager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (GameUI_UIToolKit != null)
+        if (MainMenuUI_UIToolKit != null)
+        {
+            // Set UI Toolkit Vars
+            playButton = MainMenuUIDoc.rootVisualElement.Q<Button>("Play");
+            instructionsButton = MainMenuUIDoc.rootVisualElement.Q<Button>("Instructions");
+            gradingButton = MainMenuUIDoc.rootVisualElement.Q<Button>("Grading");
+            creditsButton = MainMenuUIDoc.rootVisualElement.Q<Button>("Credits");
+            quitButton = MainMenuUIDoc.rootVisualElement.Q<Button>("Quit");
+
+
+            playButton.clicked += () => SceneManager.LoadScene("TestScene");
+            instructionsButton.clicked += () => SceneManager.LoadScene("InstructionsScene");
+            gradingButton.clicked += () => SceneManager.LoadScene("GradingScene");
+            creditsButton.clicked += () => SceneManager.LoadScene("CreditsScene");
+            quitButton.clicked += QuitButton;
+        }
+
+            if (GameUI_UIToolKit != null)
         {
             // Set UI Toolkit Vars
             healthLabel = UIDoc.rootVisualElement.Q<Label>("HealthLabel");
