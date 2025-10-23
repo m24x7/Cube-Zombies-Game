@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66afbb49cd969de46a6372be1663acb9, type: 3}
+  m_Name: Item_Weapon_Melee_CommonSword
+  m_EditorClassIdentifier: Assembly-CSharp::ItemDefinition_Weapon_Melee
+  Name: Common Sword
+  itemEnum: 2
+  itemType: 1
+  prefab: {fileID: 2383903792106905279, guid: 8bc44453510244743a01453d45aca5bb, type: 3}
+  Rarity: 0
+  Damage: 5
+  AttackRange: 3
+  AttackSpeed: 20

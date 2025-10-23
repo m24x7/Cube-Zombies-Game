@@ -148,6 +148,7 @@ public class UI_Manager : MonoBehaviour
         if (Hotbar != null)
         {
             slots = Hotbar.transform.childCount;
+            Debug.Log($"Hotbar Slots: {slots}");
 
             for (int i = 0; i < slots; i++)
             {
@@ -297,10 +298,33 @@ public class UI_Manager : MonoBehaviour
 
     public void SelectHotbarSlot(int slot)
     {
+        //Debug.Log($"Selecting Hotbar Slot: {slot}");
         if (slot < 0 || slot >= slots) return;
         hotbarSlots[selectedSlot].GetComponent<UnityEngine.UI.Image>().color = Color.white;
+        if (hotbarSlots[selectedSlot].GetComponent<UnityEngine.UI.Image>().sprite == null) hotbarSlots[selectedSlot].GetComponent<UnityEngine.UI.Image>().color = Color.clear;
         selectedSlot = slot;
         hotbarSlots[selectedSlot].GetComponent<UnityEngine.UI.Image>().color = Color.yellow;
+        if (hotbarSlots[selectedSlot].GetComponent<UnityEngine.UI.Image>().sprite == null) hotbarSlots[selectedSlot].GetComponent<UnityEngine.UI.Image>().color = Color.clear;
+    }
+
+    public void UpdateHotbarSlots()
+    {
+        for (int i = 0; i < slots; i++)
+        {
+            if (i >= PlayerController.Inventory.InventoryItems.Count) break;
+            var item = PlayerController.Inventory.InventoryItems[i];
+            if (item != null)
+            {
+                hotbarSlots[i].transform.Find("Image").GetComponent<UnityEngine.UI.Image>().sprite = item.GetComponent<I_Item>().Icon;
+                if (i == selectedSlot) hotbarSlots[i].transform.Find("Image").GetComponent<UnityEngine.UI.Image>().color = Color.yellow;
+                else hotbarSlots[i].transform.Find("Image").GetComponent<UnityEngine.UI.Image>().color = Color.white;
+            }
+            else
+            {
+                hotbarSlots[i].GetComponent<UnityEngine.UI.Image>().sprite = null;
+                hotbarSlots[i].GetComponent<UnityEngine.UI.Image>().color = Color.clear;
+            }
+        }
     }
 
     private void ResumeButton()

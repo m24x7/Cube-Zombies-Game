@@ -19,7 +19,7 @@ public class Quest : MonoBehaviour
     [SerializeField] private int objectiveCount = 0;
     [SerializeField] private int currentCount = 0;
 
-    [SerializeField] private bool isCompleted = false;
+    //[SerializeField] private bool isCompleted = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -59,7 +59,7 @@ public class Quest : MonoBehaviour
 
     public void CompleteObjective()
     {
-        isCompleted = true;
+        //isCompleted = true;
 
 
         Controller_QuestUI Controller = gameObject.GetComponentsInParent<Controller_QuestUI>()[0];

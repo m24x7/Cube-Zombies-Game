@@ -6,7 +6,7 @@ public class Controller_Game : MonoBehaviour
     [SerializeField] private GameObject PlayerInstance;
     [SerializeField] private GameObject PlayerSpawnPoint;
 
-    [SerializeField] private bool IsBuildEnabled = false;
+    //[SerializeField] private bool IsBuildEnabled = false;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

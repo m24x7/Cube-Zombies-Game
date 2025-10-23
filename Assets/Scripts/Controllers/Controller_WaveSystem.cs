@@ -64,12 +64,12 @@ public class Controller_WaveSystem : MonoBehaviour
         //if (!currency) currency = FindFirstObjectByType<BuildCurrency>();
         //if (!phase) phase = FindFirstObjectByType<BuildPhaseManager>();
         if (!player && playerCamera) player = playerCamera.transform;
-
         StartCoroutine(StartFirstWaveWithShortBuild());
     }
 
     IEnumerator StartFirstWaveWithShortBuild()
     {
+        //Debug.Log("Wave System: Starting first wave after short build phase.");
         // Give player a brief build window at game start
         //if (phase) phase.SetBuildPhase(true);
         yield return new WaitForSeconds(5f);
@@ -78,6 +78,7 @@ public class Controller_WaveSystem : MonoBehaviour
 
     public void StartNextWave()
     {
+        //Debug.Log("Wave System: Starting wave " + (CurrentWaveNumber + 1));
         if (waveRoutine != null) StopCoroutine(waveRoutine);
 
         uiManager.UpdateWave();
@@ -101,6 +102,7 @@ public class Controller_WaveSystem : MonoBehaviour
 
     IEnumerator RunWave()
     {
+        //Debug.Log("Wave System: Running wave " + CurrentWaveNumber);
         //if (WavesRemaining == 0) questUI.Quests[0].GetComponent<Quest>().CompleteObjective();
         var spec = GetWaveSpec(CurrentWaveNumber);
 
@@ -268,11 +270,24 @@ public class Controller_WaveSystem : MonoBehaviour
 
     bool TrySpawn(EnemyDefinition def, float healthMult, float speedMult)
     {
+        //Debug.Log("Wave System: Trying to Spawn enemy " + def.id);
+
+        //Debug.Log("Wave System: Picking spawn point for enemy " + def.id);
         var sp = PickSpawnPointWeighted();
-        if (sp == null) return false;
+        if (sp == null)
+        {
+            //Debug.Log("No Spawn Point Selected");
+            return false;
+        }
 
-        if (!sp.TryGetSpawnPosition(out var pos)) return false;
+        //Debug.Log("Wave System: Getting spawn position for enemy " + def.id);
+        if (!sp.TryGetSpawnPosition(out var pos))
+        {
+            //Debug.Log("No Spawn Position Selected");
+            return false;
+        }
 
+        //Debug.Log("Wave System: Spawning enemy " + def.id + " at " + pos);
         var go = Instantiate(def.prefab, pos, Quaternion.identity);
         var hp = go.GetComponent<TestEnemyController>();
         if (!hp) { Destroy(go); return false; }

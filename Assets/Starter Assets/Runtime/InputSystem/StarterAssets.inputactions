@@ -61,6 +61,24 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "PauseGame",
+                    "type": "Button",
+                    "id": "c8f46cb5-f159-497e-942a-b8147f539df1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Instructions",
+                    "type": "Button",
+                    "id": "2949c084-0a92-4631-93f1-075327df5ba0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "SwapSword",
                     "type": "Button",
                     "id": "ded6b0a2-fdaa-4a5b-89e7-6ef2679dbac4",
@@ -79,18 +97,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "PauseGame",
+                    "name": "HotBarInput3",
                     "type": "Button",
-                    "id": "c8f46cb5-f159-497e-942a-b8147f539df1",
+                    "id": "e09014b2-0f36-4c1e-a5cd-b09fee35a22c",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Instructions",
+                    "name": "HotBarInput4",
                     "type": "Button",
-                    "id": "2949c084-0a92-4631-93f1-075327df5ba0",
+                    "id": "38ce67aa-25b8-46f3-b695-5a0388323d04",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -313,7 +331,7 @@
                     "path": "<Keyboard>/2",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";KeyboardMouse",
                     "action": "SwapBlock",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -337,6 +355,28 @@
                     "processors": "",
                     "groups": ";KeyboardMouse",
                     "action": "Instructions",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d4eab487-5354-4464-941f-d7b6b9a2c0ff",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardMouse",
+                    "action": "HotBarInput3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b0a4c2e2-4e80-474c-b671-f046deb4eb19",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardMouse",
+                    "action": "HotBarInput4",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

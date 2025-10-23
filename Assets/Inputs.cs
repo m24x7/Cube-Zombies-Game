@@ -10,10 +10,12 @@ public class Inputs : MonoBehaviour
     public bool sprint;
     public bool attack;
     public bool useItem;
-    public bool swapSword;
-    public bool swapBlock;
     public bool pauseGame;
     public bool instructions;
+    public bool swapSword;
+    public bool swapBlock;
+    public bool hotBar3;
+    public bool hotBar4;
 
     [Header("Movement Settings")]
     public bool analogMovement;
@@ -63,6 +65,16 @@ public class Inputs : MonoBehaviour
     {
         SwapBlock(value.isPressed);
     }
+    public void OnHotBar3(InputValue value)
+    {
+        Debug.Log("HotBar3 pressed: " + value.isPressed);
+        HotBar3(value.isPressed);
+    }
+    public void OnHotBar4(InputValue value)
+    {
+        Debug.Log("HotBar4 pressed: " + value.isPressed);
+        HotBar4(value.isPressed);
+    }
     public void OnPauseGame(InputValue value)
     {
         PauseGame(value.isPressed);
@@ -110,6 +122,14 @@ public class Inputs : MonoBehaviour
     public void SwapBlock(bool newBlockState)
     {
         swapBlock = newBlockState;
+    }
+    public void HotBar3(bool newHotBar3State)
+    {
+        hotBar3 = newHotBar3State;
+    }
+    public void HotBar4(bool newHotBar4State)
+    {
+        hotBar4 = newHotBar4State;
     }
     public void PauseGame(bool newPauseState)
     {
