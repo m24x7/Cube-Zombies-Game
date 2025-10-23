@@ -22,6 +22,11 @@ public class Inventory : MonoBehaviour
         
     }
 
+    public bool StillRoomInInventory()
+    {
+        return inventory.Count < maxInventorySize;
+    }
+
     //public GameObject GetItemByIndex(int index)
     //{
     //    if (inventory.Count == 0) return null;

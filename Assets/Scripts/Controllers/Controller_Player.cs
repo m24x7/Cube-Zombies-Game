@@ -304,12 +304,11 @@ public class Controller_Player : Parent_Entity
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        MoveStart();
+        
         inventory = GetComponent<Inventory>();
 
-        MoveStart();
-
         InitializeBasicInventory();
-
     }
 
     // Update is called once per frame
@@ -335,6 +334,43 @@ public class Controller_Player : Parent_Entity
         MoveUpdate();
 
         // Handle Inputs
+        if (_input.swapSword)
+        {
+            itemInHand = 0;
+            _input.swapSword = false;
+
+            _input.attack = false;
+            _input.useItem = false;
+        }
+
+        if (_input.swapBlock)
+        {
+            itemInHand = 1;
+            _input.swapBlock = false;
+
+            _input.attack = false;
+            _input.useItem = false;
+        }
+
+        if (_input.hotBarInput3)
+        {
+            Debug.Log("Hotbar 3 pressed");
+            itemInHand = 2;
+            _input.hotBarInput3 = false;
+
+            _input.attack = false;
+            _input.useItem = false;
+        }
+        if (_input.hotBarInput4)
+        {
+            Debug.Log("Hotbar 4 pressed");
+            itemInHand = 3;
+            _input.hotBarInput4 = false;
+
+            _input.attack = false;
+            _input.useItem = false;
+        }
+
         if (_input.useItem)
         {
             // Check what is hit by raycast from camera
@@ -354,13 +390,16 @@ public class Controller_Player : Parent_Entity
 
                     bool canBuy = wallBuy.CanBuy(points);
 
-                    if (canBuy && wallBuy.Item != null)
+                    if (canBuy && wallBuy.Item != null && inventory.StillRoomInInventory())
                     {
                         // Deduct points
                         points -= wallBuy.Cost;
+
+                        // instantiate item
+                        var item = Instantiate(wallBuy.Item, transform.Find("MainCamera/Armature/AttatchPoint"));
+
                         // Add item to inventory
-                        inventory.AddItem(wallBuy.Item);
-                        // Optionally instantiate the item in the world or add to UI inventory
+                        inventory.AddItem(item);
                         //Debug.Log("Bought item: " + wallBuy.Item.name);
 
                         if (uiManager != null) uiManager.UpdateScore();
@@ -379,67 +418,32 @@ public class Controller_Player : Parent_Entity
         }
 
         //Debug.Log("attackInput: " + _input.attack);
-        if (_input.attack && attackCooldown <= 0 && inventory.InventoryItems[itemInHand].GetComponent<Item_Weapon_Melee>() != null)
+        if (itemInHand < inventory.InventoryItems.Count)
         {
-            Attack();
-            //_input.attack = false; // prevent multiple attack inputs
+            if (_input.attack && attackCooldown <= 0 && inventory.InventoryItems[itemInHand].GetComponent<Item_Weapon_Melee>() != null)
+            {
+                Attack();
+                //_input.attack = false; // prevent multiple attack inputs
 
-            attackCooldown = inventory.InventoryItems[itemInHand].GetComponent<Item_Weapon_Melee>().SwingSpeed; //* Time.fixedDeltaTime;
-            //Debug.Log("Attack initiated. Cooldown set to: " + attackCooldown);
+                attackCooldown = inventory.InventoryItems[itemInHand].GetComponent<Item_Weapon_Melee>().SwingSpeed; //* Time.fixedDeltaTime;
+                                                                                                                    //Debug.Log("Attack initiated. Cooldown set to: " + attackCooldown);
 
-            string[] attackSounds = new string[2] { "Sounds/Draw Weapon Metal 1-1", "Sounds/Stab 4-1" };
+                string[] attackSounds = new string[2] { "Sounds/Draw Weapon Metal 1-1", "Sounds/Stab 4-1" };
 
-            AudioSource.PlayClipAtPoint(
-                Resources.Load<AudioClip>(attackSounds[UnityEngine.Random.Range(0, attackSounds.Length)]),
-                transform.position,
-                0.5f
-            );
+                AudioSource.PlayClipAtPoint(
+                    Resources.Load<AudioClip>(attackSounds[UnityEngine.Random.Range(0, attackSounds.Length)]),
+                    transform.position,
+                    0.5f
+                );
+            }
+
+
+            if (_input.attack && inventory.InventoryItems[itemInHand].GetComponent<Item_Block>() != null)
+            {
+                BlockPlacer.TryDestroyBlockFromCamera(Camera.main, 5f, GroundLayers, LayerMask.NameToLayer("Blocks"), transform);
+                _input.attack = false;
+            }
         }
-
-
-        if (_input.attack && itemInHand == 1)
-        {
-            BlockPlacer.TryDestroyBlockFromCamera(Camera.main, 5f, GroundLayers, LayerMask.NameToLayer("Blocks"), transform);
-            _input.attack = false;
-        }
-
-        if (_input.swapSword)
-        {
-            itemInHand = 0;
-            _input.swapSword = false;
-
-            _input.attack = false;
-            _input.useItem = false;
-        }
-
-        if (_input.swapBlock)
-        {
-            itemInHand = 1;
-            _input.swapBlock = false;
-
-            _input.attack = false;
-            _input.useItem = false;
-        }
-
-        if (_input.hotBar3)
-        {
-            Debug.Log("Hotbar 3 pressed");
-            itemInHand = 2;
-            _input.hotBar3 = false;
-
-            _input.attack = false;
-            _input.useItem = false;
-        }
-        if (_input.hotBar4)
-        {
-            Debug.Log("Hotbar 4 pressed");
-            itemInHand = 3;
-            _input.hotBar4 = false;
-
-            _input.attack = false;
-            _input.useItem = false;
-        }
-
 
         switch (itemInHand)
         {
@@ -479,13 +483,13 @@ public class Controller_Player : Parent_Entity
                 inventory.InventoryItems[1].GetComponent<Item_Block>().gameObject.GetComponent<MeshRenderer>().enabled = false;
                 for (int i = 0; i < inventory.InventoryItems.Count; i++)
                 {
-                    if (inventory.InventoryItems[i].GetComponent<I_Item>() != null && inventory.InventoryItems[i].transform.Find("Mesh").gameObject != null)
+                    if (inventory.InventoryItems[i].GetComponent<I_Item>() != null && inventory.InventoryItems[i].transform.Find("Mesh") != null)
                     {
                         inventory.InventoryItems[i].transform.Find("Mesh").gameObject.SetActive(false);
                     }
                 }
 
-                inventory.InventoryItems[2].transform.Find("Mesh").gameObject.SetActive(true);
+                if (2 < inventory.InventoryItems.Count) inventory.InventoryItems[2].transform.Find("Mesh").gameObject.SetActive(true);
                 break;
             case 3:
                 if (uiManager != null) uiManager.SelectHotbarSlot(3);
@@ -493,13 +497,13 @@ public class Controller_Player : Parent_Entity
                 inventory.InventoryItems[1].GetComponent<Item_Block>().gameObject.GetComponent<MeshRenderer>().enabled = false;
                 for (int i = 0; i < inventory.InventoryItems.Count; i++)
                 {
-                    if (inventory.InventoryItems[i].GetComponent<I_Item>() != null && inventory.InventoryItems[i].transform.Find("Mesh").gameObject != null)
+                    if (inventory.InventoryItems[i].GetComponent<I_Item>() != null && inventory.InventoryItems[i].transform.Find("Mesh") != null)
                     {
                         inventory.InventoryItems[i].transform.Find("Mesh").gameObject.SetActive(false);
                     }
                 }
 
-                inventory.InventoryItems[3].transform.Find("Mesh").gameObject.SetActive(true);
+                if (3 < inventory.InventoryItems.Count) inventory.InventoryItems[3].transform.Find("Mesh").gameObject.SetActive(true);
                 break;
             default:
                 if (uiManager != null) uiManager.SelectHotbarSlot(0);
@@ -594,11 +598,7 @@ public class Controller_Player : Parent_Entity
 
     override public void Attack()
     {
-        // Build a ray from the screen center (your crosshair)
-        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-
-        // Nudge origin slightly forward so it starts outside your head/capsule
-        ray.origin += ray.direction * 0.06f;
+        Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
 
         // 1) Precise thin ray first (long-range)
         if (TryHitScan(ray, inventory.InventoryItems[itemInHand].GetComponent<Item_Weapon_Melee>().Range, 0f, out var hit))
@@ -621,31 +621,18 @@ public class Controller_Player : Parent_Entity
     {
         firstValid = default;
 
-        RaycastHit[] hits = (radius > 0f)
-            ? Physics.SphereCastAll(ray, radius, range, attackMask, QueryTriggerInteraction.Collide)
-            : Physics.RaycastAll(ray, range, attackMask, QueryTriggerInteraction.Collide);
+        Physics.Raycast(ray, out RaycastHit hit, range, ~0, QueryTriggerInteraction.Ignore);
 
-        if (hits == null || hits.Length == 0) return false;
-
-        //Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
-
-        foreach (var h in hits)
+        if (hit.collider != null)
         {
-            // Robust self-filter: ignore anything under our own root (covers weapon arms, etc.)
-            if (h.collider && h.collider.transform.root == transform.root)
-                continue;
-
-            // Enemy?
-            if (h.collider.GetComponentInParent<TestEnemyController>() != null)
+            var objectHit = hit.transform.root.gameObject;
+            if (objectHit.layer == LayerMask.NameToLayer("Enemies"))
             {
-                firstValid = h;
+                firstValid = hit;
                 return true;
             }
-
-            // Solid non-enemy blocks the shot path
-            if (!h.collider.isTrigger)
-                return false;
         }
+
         return false;
     }
 
@@ -654,79 +641,6 @@ public class Controller_Player : Parent_Entity
         var enemy = hit.collider.GetComponentInParent<Parent_Entity>();
         if (enemy != null)
             enemy.TakeDamage(inventory.InventoryItems[itemInHand].GetComponent<Item_Weapon_Melee>() != null ? inventory.InventoryItems[itemInHand].GetComponent<Item_Weapon_Melee>().Damage : 10);
-    }
-
-    override protected IEnumerator AttackRoutine()
-    {
-        // (Optional) play windup animation/sound here
-        yield return new WaitForSeconds(attackWindup);
-
-        // Do the actual hit once (hitscan)
-        DoAttackRaycast();
-
-        // If you want a short "active" window (e.g., for multi-hit sweep), you could
-        // loop DoAttackRaycast() during attackActive. For hitscan, once is typical.
-        if (attackActive > 0f)
-            yield return new WaitForSeconds(attackActive);
-
-        // Recovery (can’t attack again during this)
-        if (attackRecovery > 0f)
-            yield return new WaitForSeconds(attackRecovery);
-
-        attackCoroutine = null;
-    }
-    private void DoAttackRaycast()
-    {
-        Debug.Log("Player Attack: Swinging sword");
-
-        //// Origin/direction from your existing setup
-        //Vector3 origin = transform.position;
-        //origin.y += 1.375f; // adjust to approximate player "eye" height
-        //Vector3 direction = Camera.main.transform.forward;
-
-        // Visualize shot
-        Debug.DrawRay(transform.position + new Vector3(0f, 1.375f, 0f), Camera.main.transform.forward * inventory.InventoryItems[itemInHand].GetComponent<Item_Weapon_Melee>().Range, Color.red, 0.1f);
-
-        // First-hit logic that respects blockers (walls)
-        var hits = Physics.RaycastAll(
-            transform.position + new Vector3(0f, 1.375f, 0f),
-            Camera.main.transform.forward,
-            inventory.InventoryItems[itemInHand].GetComponent<Item_Weapon_Melee>().Range,
-            ~0, //attackMask,
-            QueryTriggerInteraction.Ignore
-        );
-
-        Debug.Log("Player Attack: Hit " + hits.Length + " things.");
-
-        if (hits == null || hits.Length == 0) return;
-
-        Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
-
-        foreach (var hit in hits)
-        {
-            // Skip self
-            if (hit.collider == playerCollider || hit.collider.transform.root == transform.root) continue;
-
-            var enemy = hit.collider.GetComponentInParent<Parent_Entity>();
-            if (enemy != null)
-            {
-                enemy.TakeDamage(inventory.InventoryItems[itemInHand].GetComponent<Item_Weapon_Melee>().Damage);
-                // (Optional) VFX/SFX using hit.point, hit.normal
-                return;
-            }
-
-            // Solid non-enemy blocks the ray
-            if (!hit.collider.isTrigger)
-                return;
-        }
-    }
-    public void CancelAttack()
-    {
-        if (attackCoroutine != null)
-        {
-            StopCoroutine(attackCoroutine);
-            attackCoroutine = null;
-        }
     }
 
     private void InitializeBasicInventory()

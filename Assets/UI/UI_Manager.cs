@@ -300,7 +300,7 @@ public class UI_Manager : MonoBehaviour
     {
         //Debug.Log($"Selecting Hotbar Slot: {slot}");
         if (slot < 0 || slot >= slots) return;
-        hotbarSlots[selectedSlot].GetComponent<UnityEngine.UI.Image>().color = Color.white;
+        hotbarSlots[selectedSlot].GetComponent<UnityEngine.UI.Image>().color = new Vector4(0, 0, 0, 100f / 255f);
         if (hotbarSlots[selectedSlot].GetComponent<UnityEngine.UI.Image>().sprite == null) hotbarSlots[selectedSlot].GetComponent<UnityEngine.UI.Image>().color = Color.clear;
         selectedSlot = slot;
         hotbarSlots[selectedSlot].GetComponent<UnityEngine.UI.Image>().color = Color.yellow;
@@ -317,6 +317,15 @@ public class UI_Manager : MonoBehaviour
             {
                 hotbarSlots[i].transform.Find("Image").GetComponent<UnityEngine.UI.Image>().sprite = item.GetComponent<I_Item>().Icon;
                 hotbarSlots[i].transform.Find("Image").GetComponent<UnityEngine.UI.Image>().color = Color.white;
+
+                if (i == selectedSlot)
+                {
+                    hotbarSlots[i].GetComponent<UnityEngine.UI.Image>().color = Color.yellow;
+                }
+                else
+                {
+                    hotbarSlots[i].GetComponent<UnityEngine.UI.Image>().color = new Vector4(0, 0, 0, 100f/255f);
+                }
             }
             else
             {

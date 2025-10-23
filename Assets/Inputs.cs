@@ -14,8 +14,8 @@ public class Inputs : MonoBehaviour
     public bool instructions;
     public bool swapSword;
     public bool swapBlock;
-    public bool hotBar3;
-    public bool hotBar4;
+    public bool hotBarInput3;
+    public bool hotBarInput4;
 
     [Header("Movement Settings")]
     public bool analogMovement;
@@ -65,15 +65,15 @@ public class Inputs : MonoBehaviour
     {
         SwapBlock(value.isPressed);
     }
-    public void OnHotBar3(InputValue value)
+    public void OnHotBarInput3(InputValue value)
     {
-        Debug.Log("HotBar3 pressed: " + value.isPressed);
-        HotBar3(value.isPressed);
+        //Debug.Log("HotBar3 pressed: " + value.isPressed);
+        HotBarInput3(value.isPressed);
     }
-    public void OnHotBar4(InputValue value)
+    public void OnHotBarInput4(InputValue value)
     {
-        Debug.Log("HotBar4 pressed: " + value.isPressed);
-        HotBar4(value.isPressed);
+        //Debug.Log("HotBar4 pressed: " + value.isPressed);
+        HotBarInput4(value.isPressed);
     }
     public void OnPauseGame(InputValue value)
     {
@@ -123,13 +123,13 @@ public class Inputs : MonoBehaviour
     {
         swapBlock = newBlockState;
     }
-    public void HotBar3(bool newHotBar3State)
+    public void HotBarInput3(bool newHotBar3State)
     {
-        hotBar3 = newHotBar3State;
+        hotBarInput3 = newHotBar3State;
     }
-    public void HotBar4(bool newHotBar4State)
+    public void HotBarInput4(bool newHotBar4State)
     {
-        hotBar4 = newHotBar4State;
+        hotBarInput4 = newHotBar4State;
     }
     public void PauseGame(bool newPauseState)
     {

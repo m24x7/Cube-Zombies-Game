@@ -540,7 +540,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1942379747}
   m_HandleRect: {fileID: 1942379746}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -651,10 +651,14 @@ MonoBehaviour:
     Renewable Resource: Health\n       Health is used when enemies attack the player.\n      
     Health regenerates over time (1 hp per 0.5 seconds).\n       Taking damage prevents
     regen (3 second healing delay).\n       Health is displayed to the player via
-    a healthbar.\n\nNavigation and Items\n- Map/Compass/Overview Feature\n      
-    A Mini Map has been added to the bottom left corner of the screen.\n       This
-    minimap displays the general shape of the environment, the location and rotation
-    of the player, and the blocks placed by the player."
+    a healthbar.\n\nNavigation and Items\n- List of selectable items\n        The
+    Wall Buying mechanic is officially implemented!\n         Players can now buy
+    two new swords using the points they gain from killing enemies.\n         The
+    hotbar has also been updated to dynamically reflect the player's current inventory!\n-
+    Map/Compass/Overview Feature\n       A Mini Map has been added to the bottom
+    left corner of the screen.\n       This minimap displays the general shape of
+    the environment, the location and rotation of the player, and the blocks placed
+    by the player."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 41cd41d571441cb42a0901515984eebb, type: 2}
   m_sharedMaterial: {fileID: -2907957827466600840, guid: 41cd41d571441cb42a0901515984eebb, type: 2}
@@ -681,7 +685,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 71.3
+  m_fontSize: 62.6
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
