@@ -157,7 +157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba10014a5532ee4982a0255a67ad83f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item_Weapon_Melee
-  itemDef: {fileID: 0}
+  itemDef: {fileID: 11400000, guid: 087444721c8c141499fc0ff2dd895a22, type: 2}
   itemName: 
   itemID: 0
   typeID: 0

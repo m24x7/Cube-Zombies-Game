@@ -316,8 +316,7 @@ public class UI_Manager : MonoBehaviour
             if (item != null)
             {
                 hotbarSlots[i].transform.Find("Image").GetComponent<UnityEngine.UI.Image>().sprite = item.GetComponent<I_Item>().Icon;
-                if (i == selectedSlot) hotbarSlots[i].transform.Find("Image").GetComponent<UnityEngine.UI.Image>().color = Color.yellow;
-                else hotbarSlots[i].transform.Find("Image").GetComponent<UnityEngine.UI.Image>().color = Color.white;
+                hotbarSlots[i].transform.Find("Image").GetComponent<UnityEngine.UI.Image>().color = Color.white;
             }
             else
             {
