@@ -155,8 +155,8 @@ public class Controller_Player : Parent_Entity
 
     private void MoveUpdate()
     {
-        JumpAndGravity();
-        GroundedCheck();
+        //JumpAndGravity();
+        //GroundedCheck();
         Move();
     }
 
