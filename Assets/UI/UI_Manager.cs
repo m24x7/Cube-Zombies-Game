@@ -157,6 +157,9 @@ public class UI_Manager : MonoBehaviour
 
             SelectHotbarSlot(0);
         }
+
+        UnityEngine.Cursor.visible = false;
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void UpdateHealth()

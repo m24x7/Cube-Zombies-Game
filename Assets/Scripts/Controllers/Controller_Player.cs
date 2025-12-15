@@ -51,6 +51,9 @@ public class Controller_Player : Parent_Entity
     private int healthLost = 0;
     public int HealthLost { get => healthLost; }
 
+
+    public GameObject Map;
+
     #region Movement
     [Header("Player")]
     [Tooltip("Move speed of the character in m/s")]
@@ -161,7 +164,7 @@ public class Controller_Player : Parent_Entity
     {
         // set sphere position, with offset
         Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
-        Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
+        Grounded = Physics.CheckSphere(spherePosition, GroundedRadius - 0.1f, GroundLayers, QueryTriggerInteraction.Ignore);
     }
 
     private void CameraRotation()
@@ -440,7 +443,11 @@ public class Controller_Player : Parent_Entity
 
             if (_input.attack && inventory.InventoryItems[itemInHand].GetComponent<Item_Block>() != null)
             {
-                BlockPlacer.TryDestroyBlockFromCamera(Camera.main, 5f, GroundLayers, LayerMask.NameToLayer("Blocks"), transform);
+                var blockDestroyed = BlockPlacer.TryDestroyBlockFromCamera(Camera.main, 5f, GroundLayers, LayerMask.NameToLayer("Blocks"), transform);
+                if (blockDestroyed)
+                {
+                    Map.GetComponent<NavMeshUtils>().UpdateNavMesh();
+                }
                 _input.attack = false;
             }
         }
@@ -593,7 +600,12 @@ public class Controller_Player : Parent_Entity
 
     private void placeBlock()
     {
-        BlockPlacer.TryPlaceBlockFromCamera(Camera.main, 5f, blockingBuildMask, blockPrefab);
+        var placedBlock = BlockPlacer.TryPlaceBlockFromCamera(Camera.main, 5f, blockingBuildMask, blockPrefab);
+
+        if (placedBlock)
+        {
+            Map.GetComponent<NavMeshUtils>().UpdateNavMesh();
+        }
     }
 
     override public void Attack()
