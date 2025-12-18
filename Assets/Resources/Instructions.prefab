@@ -242,15 +242,16 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Controls:\r\n    WASD for movement.\r\n    Space for jump.\r\n    Left
-    Shift to sprint.\r\n    Esc for Pause Menu (which includes the quit button).\r\n   
-    Use 1, 2, 3, 4 to change what Item you are holding.\r\n    Left Click (or hold)
-    to attack while a sword is equipped.\r\n    Right Click to place blocks and left
-    click to destroy blocks while the building block is equipped.\n    Right click
-    to interact with interactable objects.\n    Press \"I\" to bring up the instructions
-    in-game.\r\n\r\nHow To Play\r\n    Use swords to defeat enemies and the building
-    block to alter the environment.\n    You can use points to purchase stronger
-    swords from signs on the walls.\r\n    Complete all waves to win."
+  m_text: "Controls:\r\n    WASD for movement.\r\n    Space for jump. (Jumping currently
+    Disabled)\r\n    Left Shift to sprint.\r\n    Esc for Pause Menu (which includes
+    the quit button).\r\n    Use 1, 2, 3, 4 to change what Item you are holding.\r\n   
+    Left Click (or hold) to attack while a sword is equipped.\r\n    Right Click
+    to place blocks and left click to destroy blocks while the building block is
+    equipped.\n    Right click to interact with interactable objects.\n    Press
+    \"I\" to bring up the instructions in-game.\r\n\r\nHow To Play\r\n    Use swords
+    to defeat enemies and the building block to alter the environment.\n    You can
+    use points to purchase stronger swords from signs on the walls.\r\n    Complete
+    all waves to win."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 41cd41d571441cb42a0901515984eebb, type: 2}
   m_sharedMaterial: {fileID: -2907957827466600840, guid: 41cd41d571441cb42a0901515984eebb, type: 2}

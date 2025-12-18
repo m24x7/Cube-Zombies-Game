@@ -158,7 +158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item_Weapon_Melee
   itemDef: {fileID: 11400000, guid: 087444721c8c141499fc0ff2dd895a22, type: 2}
-  itemName: 
+  itemName: Uncommon Sword
   itemID: 0
   typeID: 0
   damage: 10

@@ -75,6 +75,9 @@ public class UI_Manager : MonoBehaviour
             gradingButton.clicked += () => SceneManager.LoadScene("GradingScene");
             creditsButton.clicked += () => SceneManager.LoadScene("CreditsScene");
             quitButton.clicked += QuitButton;
+
+            UnityEngine.Cursor.visible = true;
+            UnityEngine.Cursor.lockState = CursorLockMode.None;
         }
 
         if (UIDoc != null)
@@ -110,6 +113,11 @@ public class UI_Manager : MonoBehaviour
 
             UpdateHealth();
             UpdateScore();
+
+            Time.timeScale = 1f;
+
+            UnityEngine.Cursor.visible = false;
+            UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         }
 
         if (EndGameUIDoc != null)
@@ -158,8 +166,8 @@ public class UI_Manager : MonoBehaviour
             SelectHotbarSlot(0);
         }
 
-        UnityEngine.Cursor.visible = false;
-        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+        //UnityEngine.Cursor.visible = false;
+        //UnityEngine.Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void UpdateHealth()
