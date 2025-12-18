@@ -7,6 +7,17 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class TestEnemyController : Parent_Entity, I_EnemyAgent
 {
+    #region Modules
+    [SerializeField] private EnemyMovement Movement;
+    public EnemyMovement GetMovement => Movement;
+    [SerializeField] private EnemyPerception Perception;
+    public EnemyPerception GetPerception => Perception;
+    [SerializeField] private EnemyDecisionMaking Decision;
+    public EnemyDecisionMaking GetDecision => Decision;
+    [SerializeField] private EnemyActions Actions;
+    public EnemyActions GetActions => Actions;
+    #endregion
+
     public static event Action<TestEnemyController> OnEntityDeath;
 
     [Header("Runtime values (initialized by spawner)")]
@@ -15,34 +26,15 @@ public class TestEnemyController : Parent_Entity, I_EnemyAgent
 
     private NavMeshAgent agent;
 
-    //// ---- HIT FLASH SETTINGS ----
-    [Header("Hit Flash")]
+    //[Header("Hit Flash")]
     [SerializeField] private HitFlash hitFlash;
-    //[SerializeField] private Renderer[] renderers;        // leave empty to auto-find in children
-    //[SerializeField] private Color flashColor = Color.red;
-    //[SerializeField, Min(0.01f)] private float flashDuration = 0.12f;
-    //[SerializeField] private AnimationCurve flashCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
 
-    //private struct RendData
-    //{
-    //    public Renderer r;
-    //    public int colorId;      // which property we're overriding
-    //    public Color baseColor;  // original material color
-    //    public bool valid;
-    //}
 
-    //private readonly List<RendData> _rends = new();
-    //private MaterialPropertyBlock _mpb;
-    //private Coroutine damageFlashRoutine;
-
-    //// Common shader property IDs
-    //private static readonly int _BaseColorID = Shader.PropertyToID("_BaseColor");
-    //private static readonly int _ColorID = Shader.PropertyToID("_Color");
-    //private static readonly int _EmissionID = Shader.PropertyToID("_EmissionColor");
-
+    #region Sounds
     private float randSoundTimer = 0;
     private string[] sounds = { "Sounds/Creature 1-21", "Sounds/Zombie 1 - Short 1-01" };
     private string[] hurtSounds = { "Sounds/Hit Generic 2-1" };
+    #endregion
 
     void Awake()
     {
