@@ -4,16 +4,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+/// <summary>
+/// This class controls the behavior of an enemy entity
+/// </summary>
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyController : Parent_Entity
 {
     #region Modules
 
-    [SerializeField] private EnemyStateMachine stateMachine;
-    public EnemyStateMachine StateMachine => stateMachine;
+    [SerializeField] private EnemyStateMachine stateMachine; // state machine module
+    public EnemyStateMachine StateMachine => stateMachine; // public getter
 
-    [SerializeField] private EnemyMovement movement;
-    public EnemyMovement Movement => movement;
+    [SerializeField] private EnemyMovement movement; // movement module
+    public EnemyMovement Movement => movement; // public getter
 
     //[SerializeField] private EnemyDecisionMaking Decision;
     //public EnemyDecisionMaking GetDecision => Decision;
@@ -21,124 +24,136 @@ public class EnemyController : Parent_Entity
     //public EnemyActions GetActions => Actions;
     #endregion
 
-    //[SerializeField] private float attackDistance = 1.5f;
-    //public float AttackDistance => attackDistance;
-
-    //[SerializeField] private float attackCooldown = 1.5f;
-    //public float AttackCooldown => attackCooldown;
-
-
-    [SerializeField] private float attackDamage = 5f;
-    public float AttackDamage => attackDamage;
-
     #region Settings
     [Header("Perception Settings")]
-    [SerializeField] private float attackRangeStart = 2f;
-    public float AttackRangeStart => attackRangeStart;
-    [SerializeField] private float rayPerceptionRange = 2f;
-    public float RayPerceptionRange => rayPerceptionRange;
+    [SerializeField] private float attackRangeStart = 2f; // distance to start attack behaviors
+    public float AttackRangeStart => attackRangeStart; // public getter
+
 
     [Header("AttackBlocks Settings")]
-    [SerializeField] private float blockDetectionRange = 1.5f;
-    public float BlockDetectionRange => blockDetectionRange;
-    [SerializeField] private float blockAttackDamage = 3f;
-    public float BlockAttackDamage => blockAttackDamage;
-    [SerializeField] private float blockAttackCooldown = 1f;
-    public float BlockAttackCooldown => blockAttackCooldown;
+    [SerializeField] private float blockDetectionRange = 1.5f; // distance to detect blocks in front of enemy
+    public float BlockDetectionRange => blockDetectionRange; // public getter
+
+    [SerializeField] private int blockAttackDamage = 1; // damage dealt to blocks
+    public int BlockAttackDamage => blockAttackDamage; // public getter
+
+    [SerializeField] private float blockAttackCooldown = 20f; // cooldown between block attacks
+    public float BlockAttackCooldown => blockAttackCooldown; // public getter
+
 
     [Header("AttackPlayer Settings")]
-    [SerializeField] private float playerAttackRange = 1.5f;
-    public float PlayerAttackDistance => playerAttackRange;
-    [SerializeField] private float playerAttackDamage = 5f;
-    public float PlayerAttackDamage => playerAttackDamage;
-    [SerializeField] private float playerAttackCooldown = 1.5f;
-    public float PlayerAttackCooldown => playerAttackCooldown;
+    [SerializeField] private float playerAttackRange = 1.5f; // distance to attack player
+    public float PlayerAttackDistance => playerAttackRange; // public getter
+
+    [SerializeField] private float playerAttackDamage = 10f; // damage dealt to player
+    public float PlayerAttackDamage => playerAttackDamage; // public getter
+
+    [SerializeField] private float playerAttackCooldown = 30f; // cooldown between player attacks
+    public float PlayerAttackCooldown => playerAttackCooldown; // public getter
     #endregion
 
-    private float attackCooldownRemaining = 0f;
-    public float AttackCooldownRemaining
+    private float attackCooldownRemaining = 0f; // time remaining until next attack
+    public float AttackCooldownRemaining // public getter and setter
     {
         get => attackCooldownRemaining;
         set => attackCooldownRemaining = value;
     }
 
     #region Perception
-    [SerializeField] private EnemyState enemyState;
-    public EnemyState EnemyState
+    [Header("Perception Values")]
+    [SerializeField] private EnemyState enemyState; // current state of the enemy
+    public EnemyState EnemyState // public getter and setter
     {
         get => enemyState;
         set => enemyState = value;
     }
 
-    [SerializeField] private Transform target;
-    public Transform Target
+    [SerializeField] private Transform target; // usually the player
+    public Transform Target // public getter and setter
     {
         get => target;
         set => target = value;
     }
-    public void SetTarget(Transform t) => Target = t;
+    public void SetTarget(Transform t) => Target = t; // public method to set target
 
-    [SerializeField] private bool blockInPath = false;
-    public bool BlockInPath
+    [SerializeField] private bool blockInPath = false; // whether there is a block in front of the enemy
+    public bool BlockInPath // public getter and private setter
     {
         get => blockInPath;
         private set => blockInPath = value;
     }
-    [SerializeField] private float maxDetourFactor = 3f; // how much longer a detour may be vs straight line
-    [SerializeField] private bool prefersBreakingPath = false;
-    public bool PrefersBreakingPath => prefersBreakingPath;
 
-    public bool CanAttack => attackCooldownRemaining <= 0;
+    //[SerializeField] private float maxDetourFactor = 3f; // how much longer a detour may be vs straight line
+    //[SerializeField] private bool prefersBreakingPath = false;
+    //public bool PrefersBreakingPath => prefersBreakingPath;
+
+    public bool CanAttack => attackCooldownRemaining <= 0; // whether the enemy can attack
     #endregion
 
-    public static event Action<EnemyController> OnEntityDeath;
+    public static event Action<EnemyController> OnEntityDeath; // Notify when enemy dies
 
     [Header("Runtime values (initialized by spawner)")]
-    public EnemyDefinition definition;
-    public int reward;
+    public EnemyDefinition definition; // definition used to initialize this enemy
+    public int reward; // reward given to player on death
 
-    private NavMeshAgent agent;
-    public NavMeshAgent Agent => agent;
+    private NavMeshAgent agent; // reference to NavMeshAgent component
+    public NavMeshAgent Agent => agent; // public getter
 
-    //[Header("Hit Flash")]
-    [SerializeField] private HitFlash hitFlash;
+    [Header("Flash Effects")]
+    [SerializeField] private HitFlash hitFlash; // reference to HitFlash component
 
 
     #region Sounds
-    private float randSoundTimer = 0;
-    private string[] sounds = { "Sounds/Creature 1-21", "Sounds/Zombie 1 - Short 1-01" };
-    private string[] hurtSounds = { "Sounds/Hit Generic 2-1" };
+    private float randSoundTimer = 0; // timer for random ambient sounds
+    private string[] sounds = { "Sounds/Creature 1-21", "Sounds/Zombie 1 - Short 1-01" }; // ambient sound clips
+    private string[] hurtSounds = { "Sounds/Hit Generic 2-1" }; // hurt sound clips
     #endregion
 
+    /// <summary>
+    /// Awake is called when the script instance is being loaded
+    /// </summary>
     void Awake()
     {
-        if (stateMachine == null) stateMachine = GetComponent<EnemyStateMachine>();
-        if (movement == null) movement = GetComponent<EnemyMovement>();
-        if (agent == null) agent = GetComponent<NavMeshAgent>();
-        if (hitFlash == null) hitFlash = GetComponent<HitFlash>();
+        // Get required components
+        if (stateMachine == null) stateMachine = GetComponent<EnemyStateMachine>(); // state machine
+        if (movement == null) movement = GetComponent<EnemyMovement>(); // movement module
+        if (agent == null) agent = GetComponent<NavMeshAgent>(); // nav mesh agent
+        if (hitFlash == null) hitFlash = GetComponent<HitFlash>(); // hit flash
 
+        // Initialize HitFlash
         hitFlash.BuildRendererCache();
     }
 
-    // Called by WaveDirector after Instantiate
+    /// <summary>
+    /// This method is called by WaveDirector after Instantiate
+    /// </summary>
+    /// <param name="def"></param>
+    /// <param name="healthMult"></param>
+    /// <param name="speedMult"></param>
     public void Initialize(EnemyDefinition def, float healthMult, float speedMult)
     {
+        // Set definition and initialize stats
         definition = def;
         Health.Init(Mathf.RoundToInt(def.baseHealth * Mathf.Max(0.1f, healthMult)));
         reward = def.killReward;
 
+        // Set movement speed
         if (agent) agent.speed = def.baseSpeed * Mathf.Max(0.1f, speedMult);
 
+        // Initialize random sound timer
         randSoundTimer = UnityEngine.Random.Range(0, 10);
     }
 
+    /// <summary>
+    /// This method is called once per frame
+    /// </summary>
     private void Update()
     {
+        // Update attack cooldown
         attackCooldownRemaining -= Time.deltaTime;
 
         // Update perception
         BlockInPath = IsBlockInPath();
-        //ShouldBreakBlocksToReachPlayer();
 
         // Update State
         StateMachine.UpdateState();
@@ -147,17 +162,28 @@ public class EnemyController : Parent_Entity
         StateMachine.ChooseAction();
     }
 
+    /// <summary>
+    /// FixedUpdate is called at a fixed interval and is independent of frame rate
+    /// </summary>
     private void FixedUpdate()
     {
-        // Play ambient sounds
-        AmbientSounds();
+        AmbientSounds(); // Play ambient sounds
     }
 
     #region HP Methods
+    /// <summary>
+    /// This method applies damage to the enemy.
+    /// </summary>
+    /// <param name="damage"></param>
+    /// <param name="ignoreInvincibility"></param>
     public override void TakeDamage(int damage, bool ignoreInvincibility = false)
     {
+        // Apply damage using base method
         base.TakeDamage(damage);
+
+        // Trigger hit flash
         hitFlash.TriggerHitFlash();
+
         Debug.Log("TestEnemyController: Took " + damage + " damage. Current health: " + Health.Cur);
 
         // Play hurt sound
@@ -168,11 +194,14 @@ public class EnemyController : Parent_Entity
         );
     }
 
+    /// <summary>
+    /// This method handles the enemy's death.
+    /// </summary>
     protected override void Die()
     {
         Debug.Log("TestEnemyController: Died.");
-        OnEntityDeath?.Invoke(this);
-        Destroy(gameObject);
+        OnEntityDeath?.Invoke(this); // Notify subscribers of death
+        Destroy(gameObject); // Destroy enemy game object
     }
     #endregion
 
@@ -181,18 +210,19 @@ public class EnemyController : Parent_Entity
     /// </summary>
     private void AmbientSounds()
     {
+        // Update timer
         if (randSoundTimer > 0)
         {
             randSoundTimer -= Time.fixedDeltaTime;
         }
-        else
+        else // Play random sound
         {
             AudioSource.PlayClipAtPoint(
                 Resources.Load<AudioClip>(sounds[UnityEngine.Random.Range(0, sounds.Length)]),
                 transform.position,
                 0.2f
             );
-            randSoundTimer = UnityEngine.Random.Range(10, 30);
+            randSoundTimer = UnityEngine.Random.Range(10, 30); // Reset timer
         }
     }
 
@@ -283,8 +313,8 @@ public class EnemyController : Parent_Entity
                 Parent_Block block = hit.collider.GetComponent<Parent_Block>();
                 if (block != null)
                 {
-                    block.TakeDamage(1);
-                    attackCooldownRemaining = BlockAttackCooldown;
+                    block.TakeDamage(BlockAttackDamage); // Deal damage to block
+                    attackCooldownRemaining = BlockAttackCooldown; // Set attack cooldown
                     return;
                 }
             }
@@ -301,8 +331,8 @@ public class EnemyController : Parent_Entity
                 Parent_Block block = hit.collider.GetComponent<Parent_Block>();
                 if (block != null)
                 {
-                    block.TakeDamage(1);
-                    attackCooldownRemaining = BlockAttackCooldown;
+                    block.TakeDamage(BlockAttackDamage); // Deal damage to block
+                    attackCooldownRemaining = BlockAttackCooldown; // Set attack cooldown
                     return;
                 }
             }

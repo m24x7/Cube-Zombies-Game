@@ -1,23 +1,30 @@
 using Unity.AI.Navigation;
-//using UnityEditor.AI;
 using UnityEngine;
-using UnityEngine.AI;
 
+/// <summary>
+/// This class provides utility functions for NavMesh operations
+/// </summary>
 public class NavMeshUtils : MonoBehaviour
 {
+    // Reference to the NavMeshSurface component
     private NavMeshSurface navMeshSurface;
 
+    // Minimum interval between NavMesh updates
     [SerializeField] private float minUpdateInterval = 0.25f;
 
+    // Flag to force NavMesh update
     [SerializeField] private bool forceUpdate = false;
     public bool ForceUpdate { set => forceUpdate = value; }
 
     // Make it a singleton for easy access
     public static NavMeshUtils Instance { get; private set; }
 
-    // Awake is called when the script instance is being loaded
+    /// <summary>
+    /// Awake is called when the script instance is being loaded
+    /// </summary>
     private void Awake()
     {
+        // Singleton pattern
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -28,13 +35,16 @@ public class NavMeshUtils : MonoBehaviour
             Instance = this;
         }
 
+        // Get reference to NavMeshSurface
         navMeshSurface = GetComponent<NavMeshSurface>();
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    /// <summary>
+    /// Start is called once before the first execution of Update after the MonoBehaviour is created
+    /// </summary>
     void Start()
     {
-        navMeshSurface.BuildNavMesh();
+        navMeshSurface.BuildNavMesh(); // Initial build of the NavMesh
     }
 
     //// Update is called once per frame
@@ -47,15 +57,20 @@ public class NavMeshUtils : MonoBehaviour
     //    }
     //}
 
+    /// <summary>
+    /// This method updates the NavMesh data
+    /// </summary>
     public void UpdateNavMesh()
     {
         var data = navMeshSurface.navMeshData;
-        if (data == null)
-        {
-            // Fallback: full rebuild if no data yet
-            navMeshSurface.BuildNavMesh();
-            return;
-        }
+
+        #region Attempted Partial Update (Disabled)
+        //if (data == null)
+        //{
+        //    // Fallback: full rebuild if no data yet
+        //    navMeshSurface.BuildNavMesh();
+        //    return;
+        //}
 
         //// Collect sources restricted to bounds:
         //var sources = new System.Collections.Generic.List<NavMeshBuildSource>();
@@ -78,6 +93,7 @@ public class NavMeshUtils : MonoBehaviour
         //);
 
         //navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+        #endregion
 
         navMeshSurface.BuildNavMesh();
     }

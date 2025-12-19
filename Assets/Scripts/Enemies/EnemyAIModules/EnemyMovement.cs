@@ -1,20 +1,23 @@
 using UnityEngine;
 using UnityEngine.AI;
 
+/// <summary>
+/// This class handles the movement behavior of an enemy AI
+/// </summary>
 [RequireComponent(typeof(EnemyController))]
 public class EnemyMovement : MonoBehaviour
 {
-    private EnemyController enemyAI;
+    private EnemyController enemyAI; // Reference to the EnemyController component
 
-    
-    [SerializeField] private float repathInterval = 0.2f;
-    private float timer;
+    [SerializeField] private float repathInterval = 0.2f; // Time interval for repathing
+    private float timer; // Timer to track repathing intervals
 
     /// <summary>
     /// Awake is called when the script instance is being loaded
     /// </summary>
     private void Awake()
     {
+        // Get reference to EnemyController component
         enemyAI = GetComponent<EnemyController>();
     }
 
@@ -23,30 +26,35 @@ public class EnemyMovement : MonoBehaviour
     /// </summary>
     void Update()
     {
+        // Pause check
         if (Time.timeScale == 0f) return;
+
+        // Ensure we have a target and NavMeshAgent
         if (!enemyAI.Target || !enemyAI.Agent) return;
 
-        timer += Time.deltaTime;
-        if (timer >= repathInterval)
+        // Repathing logic
+        timer += Time.deltaTime; // Increment timer
+        if (timer >= repathInterval) // Time to recalculate path
         {
-            timer = 0f;
-            enemyAI.Agent.SetDestination(enemyAI.Target.position);
+            enemyAI.Agent.SetDestination(enemyAI.Target.position); // Update destination
+            timer = 0f; // Reset timer
         }
 
+        // State-based movement behavior
         switch (enemyAI.EnemyState)
         {
             case EnemyState.Chase:
-                enemyAI.Agent.isStopped = false;
-                enemyAI.Agent.SetDestination(enemyAI.Target.position);
+                enemyAI.Agent.isStopped = false; // Ensure the agent is moving
+                enemyAI.Agent.SetDestination(enemyAI.Target.position); // Move towards the target
                 break;
 
             case EnemyState.AttackBlock:
                 // Stop to perform attacks
-                enemyAI.Agent.isStopped = true;
+                enemyAI.Agent.isStopped = true; // Ensure the agent is stopped
                 break;
             case EnemyState.AttackPlayer:
                 // Stop to perform attacks
-                enemyAI.Agent.isStopped = true;
+                enemyAI.Agent.isStopped = true; // Ensure the agent is stopped
                 break;
         }
     }

@@ -1,6 +1,9 @@
 using Unity.AI.Navigation;
 using UnityEngine;
 
+/// <summary>
+/// This class represents a block that can be damaged and broken in the game.
+/// </summary>
 public class Parent_Block : MonoBehaviour
 {
     [SerializeField] private int hitPoints = 3;

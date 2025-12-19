@@ -1,12 +1,15 @@
 using UnityEngine;
 
+/// <summary>
+/// This class manages the overall game state
+/// </summary>
 public class Controller_Game : MonoBehaviour
 {
-    [SerializeField] private GameObject PlayerPrefab;
-    [SerializeField] private GameObject PlayerInstance;
-    public GameObject GetPlayer() => PlayerInstance;
-
-    [SerializeField] private GameObject PlayerSpawnPoint;
+    /// Player references
+    [SerializeField] private GameObject PlayerPrefab; // The player prefab to instantiate
+    [SerializeField] private GameObject PlayerInstance; // The instantiated player
+    public GameObject GetPlayer() => PlayerInstance; // Public getter for the player instance
+    [SerializeField] private GameObject PlayerSpawnPoint; // The spawn point for the player
 
     //[SerializeField] private bool IsBuildEnabled = false;
 
@@ -15,9 +18,12 @@ public class Controller_Game : MonoBehaviour
     public static Controller_Game Instance { get; private set; }
 
 
-    // Awake is called when the script instance is being loaded
+    /// <summary>
+    /// Awake is called when the script instance is being loaded
+    /// </summary>
     private void Awake()
     {
+        // Singleton pattern implementation
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -29,25 +35,15 @@ public class Controller_Game : MonoBehaviour
         }
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    /// <summary>
+    /// Start is called once before the first execution of Update after the MonoBehaviour is created
+    /// </summary>
     void Start()
     {
+        // Instantiate the player at the spawn point
         if (PlayerInstance == null)
         {
             PlayerInstance = Instantiate(PlayerPrefab, PlayerSpawnPoint.transform.position, Quaternion.identity);
         }
     }
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-        
-    //}
-
-
-
-    //private void OnPlayerDeath()
-    //{
-
-    //}
 }
