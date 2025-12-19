@@ -8,14 +8,18 @@ using UnityEngine.AI;
 public class TestEnemyController : Parent_Entity, I_EnemyAgent
 {
     #region Modules
-    [SerializeField] private EnemyMovement Movement;
-    public EnemyMovement GetMovement => Movement;
-    [SerializeField] private EnemyPerception Perception;
-    public EnemyPerception GetPerception => Perception;
-    [SerializeField] private EnemyDecisionMaking Decision;
-    public EnemyDecisionMaking GetDecision => Decision;
-    [SerializeField] private EnemyActions Actions;
-    public EnemyActions GetActions => Actions;
+
+    [SerializeField] private EnemyStateMachine stateMachine;
+    public EnemyStateMachine StateMachine => StateMachine;
+
+    //[SerializeField] private EnemyMovement Movement;
+    //public EnemyMovement GetMovement => Movement;
+    //[SerializeField] private EnemyPerception Perception;
+    //public EnemyPerception GetPerception => Perception;
+    //[SerializeField] private EnemyDecisionMaking Decision;
+    //public EnemyDecisionMaking GetDecision => Decision;
+    //[SerializeField] private EnemyActions Actions;
+    //public EnemyActions GetActions => Actions;
     #endregion
 
     public static event Action<TestEnemyController> OnEntityDeath;
@@ -74,7 +78,7 @@ public class TestEnemyController : Parent_Entity, I_EnemyAgent
         }
     }
 
-    public override void TakeDamage(int damage)
+    public override void TakeDamage(int damage, bool ignoreInvincibility = false)
     {
         base.TakeDamage(damage);
         hitFlash.TriggerHitFlash();

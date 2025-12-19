@@ -157,11 +157,8 @@ GameObject:
   - component: {fileID: 5872619792061794344}
   - component: {fileID: 1813098883705040737}
   - component: {fileID: 3878439063508001181}
+  - component: {fileID: 744636438333458845}
   - component: {fileID: 6143206136698760896}
-  - component: {fileID: 282898450227027572}
-  - component: {fileID: 3095594697711359064}
-  - component: {fileID: 6016321487035606773}
-  - component: {fileID: 7378497843354086155}
   - component: {fileID: 2297325907242714084}
   - component: {fileID: 7505795113446024360}
   m_Layer: 9
@@ -256,35 +253,25 @@ MonoBehaviour:
   attackMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  Movement: {fileID: 0}
+  Perception: {fileID: 0}
+  Decision: {fileID: 0}
+  Actions: {fileID: 0}
   definition: {fileID: 0}
   reward: 0
-  renderers: []
-  flashColor: {r: 1, g: 0, b: 0, a: 1}
-  flashDuration: 0.12
-  flashCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  hitFlash: {fileID: 0}
+--- !u!114 &744636438333458845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5748213487762348890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adf541d217693b342b2bbe9eecf836fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyStateMachine
 --- !u!114 &6143206136698760896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,54 +286,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Resource_Health
   max: 10
   cur: -1
---- !u!114 &282898450227027572
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5748213487762348890}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd02c7d028925d94dbd52b876956af86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyPerception
---- !u!114 &3095594697711359064
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5748213487762348890}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4d56ec8d046f594e9698c74a721f5a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyDecisionMaking
---- !u!114 &6016321487035606773
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5748213487762348890}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b680c570063784459d9468e6344e25b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyActions
---- !u!114 &7378497843354086155
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5748213487762348890}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3023443492308af4fa2d278632c8e4f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
 --- !u!114 &2297325907242714084
 MonoBehaviour:
   m_ObjectHideFlags: 0

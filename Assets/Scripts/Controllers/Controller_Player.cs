@@ -568,10 +568,6 @@ public class Controller_Player : Parent_Entity
         {
             // Take damage over time while in contact with enemy
             TakeDamage(10);
-            iFrames = 20; // Set invincibility frames (e.g., 20 frames)
-
-            // Set regen wait timer
-            regenWaitTimer = regenMaxWait;
         }
     }
 
@@ -582,14 +578,27 @@ public class Controller_Player : Parent_Entity
         OnHealthChange?.Invoke();
     }
 
-    override public void TakeDamage(int damage)
+    override public void TakeDamage(int damage, bool ignoreInvincibility = false)
     {
-        base.TakeDamage(damage);
+        // if currently in invincibility frames, ignore damage
+        if (iFrames > 0 && !ignoreInvincibility) return;
 
+        // Apply damage
+        health.UpdateVal(-damage);
+
+        // Set invincibility frames
+        iFrames = 20; // Set invincibility frames (e.g., 20 frames)
+
+        // Set regen wait timer
+        regenWaitTimer = regenMaxWait;
+
+        // Track total health lost
         healthLost += damage;
 
+        // Notify health change
         OnHealthChange?.Invoke();
 
+        // Check for death
         if (health.Cur <= 0) Die();
     }
 

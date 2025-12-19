@@ -4,6 +4,8 @@ public class Controller_Game : MonoBehaviour
 {
     [SerializeField] private GameObject PlayerPrefab;
     [SerializeField] private GameObject PlayerInstance;
+    public GameObject GetPlayer() => PlayerInstance;
+
     [SerializeField] private GameObject PlayerSpawnPoint;
 
     //[SerializeField] private bool IsBuildEnabled = false;

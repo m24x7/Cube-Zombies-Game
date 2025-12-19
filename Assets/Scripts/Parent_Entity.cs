@@ -23,7 +23,7 @@ public class Parent_Entity : MonoBehaviour
     protected Coroutine attackCoroutine;
 
     virtual public void Heal(int heal) { Health.UpdateVal(heal); if (health.Cur > health.Max) health.Cur = health.Max; }
-    virtual public void TakeDamage(int damage) { Health.UpdateVal(-damage); if (health.Cur <= 0) Die(); }
+    virtual public void TakeDamage(int damage, bool ignoreInvincibility = false) { Health.UpdateVal(-damage); if (health.Cur <= 0) Die(); }
     virtual protected void Die() { Debug.Log("Parent_Entity: Die not implemented"); }
     virtual public void Attack() {; }
     virtual protected IEnumerator AttackRoutine()
