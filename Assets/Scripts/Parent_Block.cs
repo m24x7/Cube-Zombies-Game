@@ -38,7 +38,7 @@ public class Parent_Block : MonoBehaviour
         // Disable components before destroying to avoid issues during NavMesh update
         GetComponent<Collider>().enabled = false;
         GetComponent<Renderer>().enabled = false;
-        GetComponent<NavMeshModifierVolume>().enabled = false;
+        GetComponentInChildren<NavMeshModifierVolume>().enabled = false;
 
         // Update the NavMesh to reflect the removed block
         NavMeshUtils.Instance.UpdateNavMesh();

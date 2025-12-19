@@ -302,8 +302,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 21033c7c6c94a1743830c2a84a4ee903, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TestEnemyController
-  health: {fileID: 6143206136698760896}
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  health: {fileID: 0}
   attackWindup: 0.05
   attackActive: 0.02
   attackRecovery: 0.25
@@ -314,17 +314,18 @@ MonoBehaviour:
   movement: {fileID: 0}
   attackRangeStart: 2
   blockDetectionRange: 1.5
-  blockAttackDamage: 3
-  blockAttackCooldown: 1
+  blockAttackDamage: 1
+  blockAttackCooldown: 2
   playerAttackRange: 1.5
   playerAttackDamage: 5
-  playerAttackCooldown: 1.5
+  playerAttackCooldown: 3
   enemyState: 0
   target: {fileID: 0}
   blockInPath: 0
   definition: {fileID: 0}
   reward: 0
   hitFlash: {fileID: 0}
+  attackFlash: {fileID: 0}
 --- !u!114 &744636438333458845
 MonoBehaviour:
   m_ObjectHideFlags: 0

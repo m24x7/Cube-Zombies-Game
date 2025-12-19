@@ -22,6 +22,16 @@ public class EnemyMovement : MonoBehaviour
     }
 
     /// <summary>
+    /// OnEnable is called when the object becomes enabled and active
+    /// </summary>
+    private void OnEnable() => NavMeshUtils.OnNavMeshUpdated += HandleNavMeshChanged; // Subscribe to NavMesh update events
+
+    /// <summary>
+    /// OnDisable is called when the behaviour becomes disabled or inactive
+    /// </summary>
+    private void OnDisable() => NavMeshUtils.OnNavMeshUpdated -= HandleNavMeshChanged; // Unsubscribe from NavMesh update events
+
+    /// <summary>
     /// Update is called once per frame
     /// </summary>
     void Update()
@@ -45,7 +55,7 @@ public class EnemyMovement : MonoBehaviour
         {
             case EnemyState.Chase:
                 enemyAI.Agent.isStopped = false; // Ensure the agent is moving
-                enemyAI.Agent.SetDestination(enemyAI.Target.position); // Move towards the target
+                //enemyAI.Agent.SetDestination(enemyAI.Target.position); // Move towards the target
                 break;
 
             case EnemyState.AttackBlock:
@@ -57,5 +67,19 @@ public class EnemyMovement : MonoBehaviour
                 enemyAI.Agent.isStopped = true; // Ensure the agent is stopped
                 break;
         }
+    }
+
+    /// <summary>
+    /// This method handles NavMesh changes by recalculating the path to the target
+    /// </summary>
+    private void HandleNavMeshChanged()
+    {
+        // Ensure we have a valid enemy AI, agent, and target
+        if (!enemyAI || !enemyAI.Agent || !enemyAI.Target) return;
+
+        // Recalculate path to target
+        var dest = enemyAI.Target.position;
+        enemyAI.Agent.ResetPath(); // Clear existing path
+        enemyAI.Agent.SetDestination(dest); // Set new destination
     }
 }

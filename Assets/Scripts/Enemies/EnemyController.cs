@@ -37,7 +37,7 @@ public class EnemyController : Parent_Entity
     [SerializeField] private int blockAttackDamage = 1; // damage dealt to blocks
     public int BlockAttackDamage => blockAttackDamage; // public getter
 
-    [SerializeField] private float blockAttackCooldown = 20f; // cooldown between block attacks
+    [SerializeField] private float blockAttackCooldown = 2f; // cooldown between block attacks
     public float BlockAttackCooldown => blockAttackCooldown; // public getter
 
 
@@ -45,10 +45,10 @@ public class EnemyController : Parent_Entity
     [SerializeField] private float playerAttackRange = 1.5f; // distance to attack player
     public float PlayerAttackDistance => playerAttackRange; // public getter
 
-    [SerializeField] private float playerAttackDamage = 10f; // damage dealt to player
+    [SerializeField] private float playerAttackDamage = 5f; // damage dealt to player
     public float PlayerAttackDamage => playerAttackDamage; // public getter
 
-    [SerializeField] private float playerAttackCooldown = 30f; // cooldown between player attacks
+    [SerializeField] private float playerAttackCooldown = 3f; // cooldown between player attacks
     public float PlayerAttackCooldown => playerAttackCooldown; // public getter
     #endregion
 
@@ -117,6 +117,7 @@ public class EnemyController : Parent_Entity
     void Awake()
     {
         // Get required components
+        if (Health == null) health = GetComponent<Resource_Health>(); // health component
         if (stateMachine == null) stateMachine = GetComponent<EnemyStateMachine>(); // state machine
         if (movement == null) movement = GetComponent<EnemyMovement>(); // movement module
         if (agent == null) agent = GetComponent<NavMeshAgent>(); // nav mesh agent

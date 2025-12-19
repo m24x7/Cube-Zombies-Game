@@ -19,6 +19,8 @@ public class NavMeshUtils : MonoBehaviour
     // Make it a singleton for easy access
     public static NavMeshUtils Instance { get; private set; }
 
+    public static event System.Action OnNavMeshUpdated;
+
     /// <summary>
     /// Awake is called when the script instance is being loaded
     /// </summary>
@@ -62,9 +64,9 @@ public class NavMeshUtils : MonoBehaviour
     /// </summary>
     public void UpdateNavMesh()
     {
-        var data = navMeshSurface.navMeshData;
-
         #region Attempted Partial Update (Disabled)
+        //var data = navMeshSurface.navMeshData;
+
         //if (data == null)
         //{
         //    // Fallback: full rebuild if no data yet
@@ -96,5 +98,7 @@ public class NavMeshUtils : MonoBehaviour
         #endregion
 
         navMeshSurface.BuildNavMesh();
+
+        OnNavMeshUpdated?.Invoke();
     }
 }
