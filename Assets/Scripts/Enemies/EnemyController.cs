@@ -63,6 +63,13 @@ public class EnemyController : Parent_Entity
     }
 
     #region Perception
+    [SerializeField] private EnemyState enemyState;
+    public EnemyState EnemyState
+    {
+        get => enemyState;
+        set => enemyState = value;
+    }
+
     [SerializeField] private Transform target;
     public Transform Target
     {
@@ -77,6 +84,9 @@ public class EnemyController : Parent_Entity
         get => blockInPath;
         private set => blockInPath = value;
     }
+    [SerializeField] private float maxDetourFactor = 3f; // how much longer a detour may be vs straight line
+    [SerializeField] private bool prefersBreakingPath = false;
+    public bool PrefersBreakingPath => prefersBreakingPath;
 
     public bool CanAttack => attackCooldownRemaining <= 0;
     #endregion
@@ -128,9 +138,12 @@ public class EnemyController : Parent_Entity
 
         // Update perception
         BlockInPath = IsBlockInPath();
+        //ShouldBreakBlocksToReachPlayer();
 
         // Update State
         StateMachine.UpdateState();
+
+        StateMachine.ChooseAction();
     }
 
     private void FixedUpdate()
@@ -183,36 +196,101 @@ public class EnemyController : Parent_Entity
     {
         // Raycast at two heights to detect blocks in front of enemy
         Vector3 r1 = transform.position;
-        if (Physics.Raycast(r1, transform.forward, out RaycastHit hit, blockDetectionRange))
+        Debug.Log("EnemyController: checking waist height block");
+        if (Physics.Raycast(r1, transform.forward, out RaycastHit hit, blockDetectionRange, LayerMask.NameToLayer("Block")))
         {
-            return hit.collider.gameObject.layer == LayerMask.NameToLayer("Block");
+            Debug.Log("EnemyController: detected waist height block");
+            return true;
         }
+
         Vector3 r2 = transform.position + transform.up;
-        if (Physics.Raycast(r2, transform.forward, out hit, blockDetectionRange))
+        Debug.Log("EnemyController: checking head height block");
+        if (Physics.Raycast(r2, transform.forward, out hit, blockDetectionRange, LayerMask.NameToLayer("Block")))
         {
-            return hit.collider.gameObject.layer == LayerMask.NameToLayer("Block");
+            Debug.Log("EnemyController: detected head height block");
+            return true;
         }
 
         // No blocks detected
         return false;
     }
+
+    ///// <summary>
+    ///// Tells whether the enemy should break blocks to reach the player,
+    ///// </summary>
+    ///// <returns></returns>
+    //public bool ShouldBreakBlocksToReachPlayer()
+    //{
+    //    var player = Controller_Game.Instance.GetPlayer();
+    //    if (player == null || agent == null) return false;
+
+    //    // Straight‑line distance
+    //    float directDistance = Vector3.Distance(transform.position, player.transform.position);
+
+    //    // 1) Try to get a navmesh path
+    //    NavMeshPath path = new NavMeshPath();
+    //    bool hasPath = agent.CalculatePath(player.transform.position, path);
+
+    //    float walkCost = Mathf.Infinity;
+    //    if (hasPath && path.status == NavMeshPathStatus.PathComplete)
+    //    {
+    //        float length = 0f;
+    //        for (int i = 1; i < path.corners.Length; i++) length += Vector3.Distance(path.corners[i - 1], path.corners[i]);
+
+    //        // Treat path length as “time” by dividing by agent speed
+    //        float speed = Mathf.Max(0.01f, agent.speed);
+    //        walkCost = length / speed;
+
+    //        // if detour is ridiculously long vs straight line, treat as invalid
+    //        if (length > directDistance * maxDetourFactor) walkCost = Mathf.Infinity;
+    //    }
+
+    //    // 2) Estimate block‑breaking cost
+    //    int hitsPerBlock = 5; // currently hardcoded as we only have 1 block type
+    //    float breakCost = hitsPerBlock * BlockAttackCooldown;
+
+    //    bool shouldBreak = breakCost < walkCost || !hasPath || path.status != NavMeshPathStatus.PathComplete;
+
+    //    prefersBreakingPath = shouldBreak;
+    //    return shouldBreak;
+    //}
     #endregion
 
     #region Actions
+    /// <summary>
+    /// Attack the block in front of the enemy, if any.
+    /// First it tries to break the block at head height, then at waist height.
+    /// </summary>
     public void AttackBlock()
     {
-        //Debug.Log("EnemyController: Attacking Block for " + BlockAttackDamage + " damage.");
-        attackCooldownRemaining = BlockAttackCooldown;
-        // Raycast to find block in front
-        Vector3 rayOrigin = transform.position + transform.up * 0.5f;
-        if (Physics.Raycast(rayOrigin, transform.forward, out RaycastHit hit, BlockDetectionRange))
+        Vector3 r1 = transform.position + transform.up;
+        if (Physics.Raycast(r1, transform.forward, out RaycastHit hit, blockDetectionRange))
         {
-            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Block"))
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Blocks"))
             {
+                Debug.Log("EnemyController: Attacking head height block " + hit.collider.gameObject.name);
                 Parent_Block block = hit.collider.GetComponent<Parent_Block>();
                 if (block != null)
                 {
                     block.Break();
+                    attackCooldownRemaining = BlockAttackCooldown;
+                    return;
+                }
+            }
+        }
+
+        Vector3 r2 = transform.position;
+        if (Physics.Raycast(r2, transform.forward, out hit, blockDetectionRange))
+        {
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Blocks"))
+            {
+                Debug.Log("EnemyController: Attacking waist height block " + hit.collider.gameObject.name);
+                Parent_Block block = hit.collider.GetComponent<Parent_Block>();
+                if (block != null)
+                {
+                    block.Break();
+                    attackCooldownRemaining = BlockAttackCooldown;
+                    return;
                 }
             }
         }

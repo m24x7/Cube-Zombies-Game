@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3447671491215260934}
   - component: {fileID: 1047212888112186853}
   - component: {fileID: -8114529144991042251}
+  - component: {fileID: 6322577793216709439}
   m_Layer: 7
   m_Name: Block
   m_TagString: Untagged
@@ -141,3 +142,20 @@ MonoBehaviour:
   itemID: 3
   typeID: 3
   itemIcon: {fileID: 21300000, guid: 265926237f6d52e47a3e44ef481a29dd, type: 3}
+--- !u!114 &6322577793216709439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7094102404468716473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifierVolume
+  m_SerializedVersion: 0
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+  m_Area: 3
+  m_AffectedAgents: ffffffff

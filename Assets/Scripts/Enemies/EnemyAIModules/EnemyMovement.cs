@@ -11,9 +11,9 @@ public class EnemyMovement : MonoBehaviour
     private float timer;
 
     /// <summary>
-    /// Start is called once before the first execution of Update after the MonoBehaviour is created
+    /// Awake is called when the script instance is being loaded
     /// </summary>
-    void Start()
+    private void Awake()
     {
         enemyAI = GetComponent<EnemyController>();
     }
@@ -31,6 +31,23 @@ public class EnemyMovement : MonoBehaviour
         {
             timer = 0f;
             enemyAI.Agent.SetDestination(enemyAI.Target.position);
+        }
+
+        switch (enemyAI.EnemyState)
+        {
+            case EnemyState.Chase:
+                enemyAI.Agent.isStopped = false;
+                enemyAI.Agent.SetDestination(enemyAI.Target.position);
+                break;
+
+            case EnemyState.AttackBlock:
+                // Stop to perform attacks
+                enemyAI.Agent.isStopped = true;
+                break;
+            case EnemyState.AttackPlayer:
+                // Stop to perform attacks
+                enemyAI.Agent.isStopped = true;
+                break;
         }
     }
 }

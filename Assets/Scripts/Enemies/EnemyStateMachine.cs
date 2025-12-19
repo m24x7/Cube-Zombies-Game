@@ -1,16 +1,16 @@
+using System.IO;
+using Unity.VisualScripting;
 using UnityEngine;
 
-
-public class EnemyStateMachine : MonoBehaviour
-{
-    #region Enemy States
-    public enum EnemyState
+public enum EnemyState
     {
         Chase,
         AttackBlock,
         AttackPlayer
     }
-
+public class EnemyStateMachine : MonoBehaviour
+{
+    #region Enemy States
     [SerializeField] private EnemyState currentState = EnemyState.Chase;
     public EnemyState GetState => currentState;
 
@@ -41,7 +41,7 @@ public class EnemyStateMachine : MonoBehaviour
     /// </summary>
     public void UpdateState()
     {
-        Transform playerTransform = Controller_Game.Instance?.GetPlayer().transform;
+        Transform playerTransform = Controller_Game.Instance.GetPlayer().transform;
         if (playerTransform == null) return;
 
         float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
@@ -49,16 +49,15 @@ public class EnemyStateMachine : MonoBehaviour
         switch (currentState)
         {
             case EnemyState.Chase:
-
-                // Transition to AttackBlock or AttackPlayer if in range
-                if (distanceToPlayer <= enemyAI.AttackRangeStart)
+                // Only attack blocks if they are in path AND breaking makes sense
+                if (enemyAI.BlockInPath) //&& enemyAI.PrefersBreakingPath)
                 {
-                    // Prioritize attacking block if in path
-                    if (enemyAI.BlockInPath)
-                    {
-                        SetState(EnemyState.AttackBlock);
-                        return;
-                    }
+                    SetState(EnemyState.AttackBlock);
+                    return;
+                }
+
+                if (distanceToPlayer <= enemyAI.PlayerAttackDistance)
+                {
                     SetState(EnemyState.AttackPlayer);
                     return;
                 }
@@ -67,15 +66,15 @@ public class EnemyStateMachine : MonoBehaviour
 
             case EnemyState.AttackBlock:
 
-                // Transition to Chase or AttackPlayer if no more blocks in the path
-                if (!enemyAI.BlockInPath)
+                // Transition to chase or attack player if no block in path
+                if (!enemyAI.BlockInPath) //|| !enemyAI.PrefersBreakingPath)
                 {
-                    // Prioritize attacking player if in range
                     if (distanceToPlayer <= enemyAI.PlayerAttackDistance)
                     {
                         SetState(EnemyState.AttackPlayer);
                         return;
                     }
+
                     SetState(EnemyState.Chase);
                     return;
                 }
@@ -84,7 +83,7 @@ public class EnemyStateMachine : MonoBehaviour
 
             case EnemyState.AttackPlayer:
                 // Transition to AttackBlock if block detected in path
-                if (enemyAI.BlockInPath)
+                if (enemyAI.BlockInPath) //&& enemyAI.PrefersBreakingPath)
                 {
                     SetState(EnemyState.AttackBlock);
                     return;
@@ -111,10 +110,23 @@ public class EnemyStateMachine : MonoBehaviour
         previousState = currentState;
         currentState = newState;
 
-        //if (enemyAI != null)
-        //{
-        //    enemyAI.OnStateChange(newState);
-        //}
+        enemyAI.EnemyState = currentState;
+    }
+
+    public void ChooseAction()
+    {   
+        switch (enemyAI.EnemyState)
+        {
+            case EnemyState.Chase:
+                // Movement handled in EnemyMovement module
+                break;
+            case EnemyState.AttackBlock: // Currently the same as AttackPlayer, will be different if we add animations
+                PerformAttack();
+                break;
+            case EnemyState.AttackPlayer:
+                PerformAttack();
+                break;
+        }
     }
 
     public void PerformAttack()
@@ -125,7 +137,7 @@ public class EnemyStateMachine : MonoBehaviour
 
         if (currentState == EnemyState.AttackPlayer)
         {
-            GameObject player = Controller_Game.Instance?.GetPlayer();
+            GameObject player = Controller_Game.Instance.GetPlayer();
             if (player != null)
             {
                 // Apply damage to player
@@ -136,12 +148,11 @@ public class EnemyStateMachine : MonoBehaviour
         }
         else if (currentState == EnemyState.AttackBlock)
         {
-            // Attack block logic here
+            // break block in front
             Debug.Log("Zombie attacks block!");
+            enemyAI.AttackBlock();
             attackCooldown = enemyAI.BlockAttackCooldown;
         }
-
-
         enemyAI.AttackCooldownRemaining = attackCooldown;
     }
 }

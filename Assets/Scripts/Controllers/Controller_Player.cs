@@ -155,8 +155,8 @@ public class Controller_Player : Parent_Entity
 
     private void MoveUpdate()
     {
-        //JumpAndGravity();
-        //GroundedCheck();
+        JumpAndGravity();
+        GroundedCheck();
         Move();
     }
 
@@ -249,18 +249,18 @@ public class Controller_Player : Parent_Entity
                 _verticalVelocity = -2f;
             }
 
-            // Jump
-            if (_input.jump && _jumpTimeoutDelta <= 0.0f)
-            {
-                // the square root of H * -2 * G = how much velocity needed to reach desired height
-                _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
-            }
+            //// Jump
+            //if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+            //{
+            //    // the square root of H * -2 * G = how much velocity needed to reach desired height
+            //    _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+            //}
 
-            // jump timeout
-            if (_jumpTimeoutDelta >= 0.0f)
-            {
-                _jumpTimeoutDelta -= Time.deltaTime;
-            }
+            //// jump timeout
+            //if (_jumpTimeoutDelta >= 0.0f)
+            //{
+            //    _jumpTimeoutDelta -= Time.deltaTime;
+            //}
         }
         else
         {
