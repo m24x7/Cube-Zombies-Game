@@ -1,5 +1,15 @@
 using UnityEngine;
 
+/// <summary>
+/// This enum represents the different states the enemy agent can be in.
+/// </summary>
+public enum EnemyState
+{
+    Search,
+    Chase,
+    Attack
+}
+
 [RequireComponent(typeof(I_EnemyAgent))]
 public class EnemyDecisionMaking : MonoBehaviour
 {

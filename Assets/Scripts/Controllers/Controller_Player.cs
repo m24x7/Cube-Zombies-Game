@@ -52,7 +52,7 @@ public class Controller_Player : Parent_Entity
     public int HealthLost { get => healthLost; }
 
 
-    public GameObject Map;
+    //public GameObject Map;
 
     #region Movement
     [Header("Player")]
@@ -446,7 +446,7 @@ public class Controller_Player : Parent_Entity
                 var blockDestroyed = BlockPlacer.TryDestroyBlockFromCamera(Camera.main, 5f, GroundLayers, LayerMask.NameToLayer("Blocks"), transform);
                 if (blockDestroyed)
                 {
-                    Map.GetComponent<NavMeshUtils>().UpdateNavMesh();
+                    NavMeshUtils.Instance.UpdateNavMesh();
                 }
                 _input.attack = false;
             }
@@ -604,7 +604,7 @@ public class Controller_Player : Parent_Entity
 
         if (placedBlock)
         {
-            Map.GetComponent<NavMeshUtils>().UpdateNavMesh();
+            NavMeshUtils.Instance.UpdateNavMesh();
         }
     }
 
