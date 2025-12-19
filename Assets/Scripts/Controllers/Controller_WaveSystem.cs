@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class Controller_WaveSystem : MonoBehaviour
 {
+    // Make it a singleton for easy access
+    public static Controller_WaveSystem Instance { get; private set; }
+
     [Header("Refs")]
     [SerializeField] private Camera playerCamera;
     [SerializeField] private Transform player;         // for EnemyChasePlayer
@@ -48,6 +51,20 @@ public class Controller_WaveSystem : MonoBehaviour
     public bool IsSpawning { get; private set; } = false;
 
     private Coroutine waveRoutine;
+
+    // Awake is called when the script instance is being loaded
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
 
     void OnEnable()
     {

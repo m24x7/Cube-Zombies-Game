@@ -10,7 +10,6 @@ public class NavMeshUtils : MonoBehaviour
     [SerializeField] private float minUpdateInterval = 0.25f;
 
     // Make it a singleton for easy access
-    //private static NavMeshUtils instance;
     public static NavMeshUtils Instance { get; private set; }
 
     // Awake is called when the script instance is being loaded
