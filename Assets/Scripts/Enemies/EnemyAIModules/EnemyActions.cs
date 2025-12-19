@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[RequireComponent(typeof(I_EnemyAgent))]
 public class EnemyActions : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created

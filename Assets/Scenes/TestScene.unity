@@ -25094,7 +25094,7 @@ MonoBehaviour:
   m_TileSize: 256
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.11666667
-  m_MinRegionArea: 2
+  m_MinRegionArea: 0.8
   m_NavMeshData: {fileID: 23800000, guid: eb0a05d02c4edac44afdeee887d51305, type: 2}
   m_BuildHeightMesh: 1
 --- !u!114 &1382861205
@@ -25110,6 +25110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NavMeshUtils
   minUpdateInterval: 0.25
+  forceUpdate: 0
 --- !u!1 &1442530289
 GameObject:
   m_ObjectHideFlags: 0

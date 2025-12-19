@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class EnemyController : Parent_Entity, I_EnemyAgent
+public class EnemyController : Parent_Entity
 {
     #region Modules
 
@@ -185,12 +185,12 @@ public class EnemyController : Parent_Entity, I_EnemyAgent
         Vector3 r1 = transform.position;
         if (Physics.Raycast(r1, transform.forward, out RaycastHit hit, blockDetectionRange))
         {
-            return hit.collider.CompareTag("Block");
+            return hit.collider.gameObject.layer == LayerMask.NameToLayer("Block");
         }
         Vector3 r2 = transform.position + transform.up;
         if (Physics.Raycast(r2, transform.forward, out hit, blockDetectionRange))
         {
-            return hit.collider.CompareTag("Block");
+            return hit.collider.gameObject.layer == LayerMask.NameToLayer("Block");
         }
 
         // No blocks detected
@@ -201,13 +201,13 @@ public class EnemyController : Parent_Entity, I_EnemyAgent
     #region Actions
     public void AttackBlock()
     {
-               Debug.Log("EnemyController: Attacking Block for " + BlockAttackDamage + " damage.");
+        //Debug.Log("EnemyController: Attacking Block for " + BlockAttackDamage + " damage.");
         attackCooldownRemaining = BlockAttackCooldown;
         // Raycast to find block in front
         Vector3 rayOrigin = transform.position + transform.up * 0.5f;
         if (Physics.Raycast(rayOrigin, transform.forward, out RaycastHit hit, BlockDetectionRange))
         {
-            if (hit.collider.CompareTag("Block"))
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Block"))
             {
                 Parent_Block block = hit.collider.GetComponent<Parent_Block>();
                 if (block != null)
