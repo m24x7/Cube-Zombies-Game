@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// This component handles flashing the object's materials to a specified color when hit,
+/// This component handles flashing the object's materials to a specified color when it attacks,
 /// </summary>
-public class HitFlash : MonoBehaviour
+public class AttackFlash : MonoBehaviour
 {
-    [Header("Hit Flash")]
+    [Header("Attack Flash")]
     [SerializeField] private Renderer[] renderers; // leave empty to auto-find in children
-    [SerializeField] private Color flashColor = Color.red; // color to flash to on hit
+    [SerializeField] private Color flashColor = Color.orange; // color to flash to on hit
     [SerializeField, Min(0.01f)] private float flashDuration = 0.12f; // duration of the flash
     [SerializeField] private AnimationCurve flashCurve = AnimationCurve.EaseInOut(0, 1, 1, 0); // curve for flash interpolation
 
@@ -27,21 +27,22 @@ public class HitFlash : MonoBehaviour
     // Cache of renderers and their data
     private readonly List<RendData> _rends = new(); // initialized empty
     private MaterialPropertyBlock _mpb; // shared property block for setting colors
-    private Coroutine damageFlashRoutine; // reference to the active flash coroutine
+    private Coroutine attackFlashRoutine; // reference to the active flash coroutine
 
     // Common shader property IDs
     private static readonly int _BaseColorID = Shader.PropertyToID("_BaseColor");
     private static readonly int _ColorID = Shader.PropertyToID("_Color");
     private static readonly int _EmissionID = Shader.PropertyToID("_EmissionColor");
 
-    #region Hit Flash
+    #region Attack Flash
 
     /// <summary>
     /// This builds the cache of renderers and their base colors to flash.
     /// </summary>
     public void BuildRendererCache()
     {
-        _mpb ??= new MaterialPropertyBlock(); // initialize if null
+        // Initialize MaterialPropertyBlock if null
+        _mpb ??= new MaterialPropertyBlock();
         _rends.Clear(); // clear existing cache
 
         // Auto-find if not assigned
@@ -49,7 +50,7 @@ public class HitFlash : MonoBehaviour
             renderers = GetComponentsInChildren<Renderer>(true);
 
         // Populate the cache
-        foreach (var r in renderers)
+        foreach (var r in renderers) // iterate through each renderer
         {
             if (!r) continue; // skip null renderers
             var mat = r.sharedMaterial; // get shared material
@@ -71,22 +72,21 @@ public class HitFlash : MonoBehaviour
     }
 
     /// <summary>
-    /// This triggers the hit flash effect.
+    /// This triggers the attack flash effect.
     /// </summary>
-    public void TriggerHitFlash()
+    public void TriggerAttackFlash()
     {
-        if (_rends.Count == 0) return; // no renderers to flash
-        if (damageFlashRoutine != null) StopCoroutine(damageFlashRoutine); // stop existing flash
-        damageFlashRoutine = StartCoroutine(HitFlashRoutine()); // start new flash coroutine
+        if (_rends.Count == 0) return;
+        if (attackFlashRoutine != null) StopCoroutine(attackFlashRoutine);
+        attackFlashRoutine = StartCoroutine(AttackFlashRoutine());
     }
 
     /// <summary>
-    /// This coroutine handles the hit flash animation.
+    /// This coroutine handles the attack flash animation.
     /// </summary>
     /// <returns></returns>
-    IEnumerator HitFlashRoutine()
+    IEnumerator AttackFlashRoutine()
     {
-        // Timer
         float t = 0f;
 
         // Animate from flashCurve value (1->0 by default)
@@ -118,8 +118,7 @@ public class HitFlash : MonoBehaviour
             rd.r.SetPropertyBlock(_mpb); // apply property block to renderer
         }
 
-        // Clear coroutine reference
-        damageFlashRoutine = null;
+        attackFlashRoutine = null; // clear coroutine reference
     }
     #endregion
 }

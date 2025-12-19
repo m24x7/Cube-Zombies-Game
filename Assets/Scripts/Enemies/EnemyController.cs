@@ -101,6 +101,8 @@ public class EnemyController : Parent_Entity
 
     [Header("Flash Effects")]
     [SerializeField] private HitFlash hitFlash; // reference to HitFlash component
+    [SerializeField] private AttackFlash attackFlash; // reference to AttackFlash component
+    public AttackFlash AttackFlash => attackFlash; // public getter
 
 
     #region Sounds
@@ -119,9 +121,11 @@ public class EnemyController : Parent_Entity
         if (movement == null) movement = GetComponent<EnemyMovement>(); // movement module
         if (agent == null) agent = GetComponent<NavMeshAgent>(); // nav mesh agent
         if (hitFlash == null) hitFlash = GetComponent<HitFlash>(); // hit flash
+        if (attackFlash == null) attackFlash = GetComponent<AttackFlash>(); // attack flash
 
-        // Initialize HitFlash
+        // Initialize Flash Effects
         hitFlash.BuildRendererCache();
+        attackFlash.BuildRendererCache();
     }
 
     /// <summary>

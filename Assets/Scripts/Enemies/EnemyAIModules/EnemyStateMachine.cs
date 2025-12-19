@@ -180,6 +180,8 @@ public class EnemyStateMachine : MonoBehaviour
             attackCooldown = enemyAI.BlockAttackCooldown;
         }
 
+        enemyAI.AttackFlash.TriggerAttackFlash(); // Trigger attack flash effect
+
         // Set attack cooldown
         enemyAI.AttackCooldownRemaining = attackCooldown;
     }

@@ -617,14 +617,14 @@ public class Controller_Player : Parent_Entity
     /// <param name="collision"></param>
     private void OnCollisionStay(Collision collision)
     {
-        // Check if collided with an enemy
-        var enemy = collision.collider.GetComponentInParent<EnemyController>();
+        //// Check if collided with an enemy
+        //var enemy = collision.collider.GetComponentInParent<EnemyController>();
 
-        // If collided with enemy and not in invincibility frames, take damage
-        if (enemy != null && iFrames <= 0)
-        {
-            TakeDamage(10);
-        }
+        //// If collided with enemy and not in invincibility frames, take damage
+        //if (enemy != null && iFrames <= 0)
+        //{
+        //    TakeDamage(10);
+        //}
     }
 
     /// <summary>
