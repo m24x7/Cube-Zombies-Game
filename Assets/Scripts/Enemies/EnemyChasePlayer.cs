@@ -25,5 +25,4 @@ public class EnemyChasePlayer : MonoBehaviour
             agent.SetDestination(target.position);
         }
     }
-
 }

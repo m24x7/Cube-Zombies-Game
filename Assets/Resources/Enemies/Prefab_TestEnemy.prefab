@@ -158,8 +158,8 @@ GameObject:
   - component: {fileID: 1813098883705040737}
   - component: {fileID: 3878439063508001181}
   - component: {fileID: 744636438333458845}
+  - component: {fileID: 9024496559021634367}
   - component: {fileID: 6143206136698760896}
-  - component: {fileID: 2297325907242714084}
   - component: {fileID: 7505795113446024360}
   m_Layer: 9
   m_Name: Prefab_TestEnemy
@@ -253,10 +253,7 @@ MonoBehaviour:
   attackMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  Movement: {fileID: 0}
-  Perception: {fileID: 0}
-  Decision: {fileID: 0}
-  Actions: {fileID: 0}
+  stateMachine: {fileID: 0}
   definition: {fileID: 0}
   reward: 0
   hitFlash: {fileID: 0}
@@ -272,6 +269,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf541d217693b342b2bbe9eecf836fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStateMachine
+  currentState: 0
+  chaseDistance: 15
+  attackDistance: 1.5
+  attackCooldown: 1.5
+  attackDamage: 5
+--- !u!114 &9024496559021634367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5748213487762348890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3023443492308af4fa2d278632c8e4f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
+  target: {fileID: 0}
+  repathInterval: 0.2
 --- !u!114 &6143206136698760896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -286,20 +302,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Resource_Health
   max: 10
   cur: -1
---- !u!114 &2297325907242714084
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5748213487762348890}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b1cfca7b85ac9c4c898eb883c787805, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyChasePlayer
-  target: {fileID: 0}
-  repathInterval: 0.2
 --- !u!114 &7505795113446024360
 MonoBehaviour:
   m_ObjectHideFlags: 0

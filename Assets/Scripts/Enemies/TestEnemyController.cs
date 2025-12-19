@@ -63,21 +63,10 @@ public class TestEnemyController : Parent_Entity, I_EnemyAgent
 
     private void FixedUpdate()
     {
-        if (randSoundTimer > 0)
-                    {
-            randSoundTimer -= Time.fixedDeltaTime;
-        }
-        else
-        {
-            AudioSource.PlayClipAtPoint(
-                Resources.Load<AudioClip>(sounds[UnityEngine.Random.Range(0, sounds.Length)]),
-                transform.position,
-                0.2f
-            );
-            randSoundTimer = UnityEngine.Random.Range(10, 30);
-        }
+        AmbientSounds();
     }
 
+    #region HP Methods
     public override void TakeDamage(int damage, bool ignoreInvincibility = false)
     {
         base.TakeDamage(damage);
@@ -97,5 +86,23 @@ public class TestEnemyController : Parent_Entity, I_EnemyAgent
         Debug.Log("TestEnemyController: Died.");
         OnEntityDeath?.Invoke(this);
         Destroy(gameObject);
+    }
+    #endregion
+
+    private void AmbientSounds()
+    {
+        if (randSoundTimer > 0)
+        {
+            randSoundTimer -= Time.fixedDeltaTime;
+        }
+        else
+        {
+            AudioSource.PlayClipAtPoint(
+                Resources.Load<AudioClip>(sounds[UnityEngine.Random.Range(0, sounds.Length)]),
+                transform.position,
+                0.2f
+            );
+            randSoundTimer = UnityEngine.Random.Range(10, 30);
+        }
     }
 }

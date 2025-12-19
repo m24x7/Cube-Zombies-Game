@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class EnemyStateMachine : MonoBehaviour
 {
+    #region Enemy States
     public enum EnemyState
     {
         Search,
@@ -11,6 +12,13 @@ public class EnemyStateMachine : MonoBehaviour
     }
 
     [SerializeField] private EnemyState currentState = EnemyState.Search;
+    public EnemyState GetState => currentState;
+
+    private EnemyState previousState;
+    public EnemyState GetPreviousState => previousState;
+    #endregion
+
+    #region Parameters
 
     [SerializeField] private float chaseDistance = 15f;
     public float GetChaseDistance => chaseDistance;
@@ -20,100 +28,101 @@ public class EnemyStateMachine : MonoBehaviour
 
     [SerializeField] private float attackCooldown = 1.5f;
     public float GetAttackCooldown => attackCooldown;
+    public bool CanAttack => attackCooldownRemaining <= 0;
 
     [SerializeField] private float attackDamage = 5f;
     public float GetAttackDamage => attackDamage;
 
-    private EnemyState previousState;
     private float attackCooldownRemaining = 0f;
+    #endregion
+
     private I_EnemyAgent enemyAI;
 
-    //    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    //    void Start()
-    //    {
-    //        enemyAI = GetComponent<I_EnemyAgent>();
-    //    }
+    /// <summary>
+    /// Start is called once before the first execution of Update after the MonoBehaviour is created
+    /// </summary>
+    void Start()
+    {
+        enemyAI = GetComponent<I_EnemyAgent>();
+    }
 
-    //    // Update is called once per frame
-    //    void Update()
-    //    {
-    //        attackCooldownRemaining -= Time.deltaTime;
-    //        UpdateState();
-    //    }
-    //    public void UpdateState()
-    //    {
-    //        Transform playerTransform = Controller_Game.Instance?.GetPlayer().transform;
-    //        if (playerTransform == null) return;
+    /// <summary>
+    /// Update is called once per frame
+    /// </summary>
+    void Update()
+    {
+        attackCooldownRemaining -= Time.deltaTime;
+        UpdateState();
+    }
 
-    //        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
+    /// <summary>
+    /// Update the enemy state based on player distance
+    /// </summary>
+    public void UpdateState()
+    {
+        Transform playerTransform = Controller_Game.Instance?.GetPlayer().transform;
+        if (playerTransform == null) return;
 
-    //        switch (currentState)
-    //        {
-    //            case EnemyState.Search:
-    //                if (distanceToPlayer < chaseDistance)
-    //                {
-    //                    SetState(EnemyState.Chase);
-    //                }
-    //                break;
+        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
 
-    //            case EnemyState.Chase:
-    //                if (distanceToPlayer > chaseDistance * 1.5f)
-    //                {
-    //                    SetState(EnemyState.Search);
-    //                }
-    //                else if (distanceToPlayer < attackDistance)
-    //                {
-    //                    SetState(EnemyState.Attack);
-    //                }
-    //                break;
+        switch (currentState)
+        {
+            case EnemyState.Search:
+                if (distanceToPlayer < chaseDistance)
+                {
+                    SetState(EnemyState.Chase);
+                }
+                break;
 
-    //            case EnemyState.Attack:
-    //                if (distanceToPlayer > attackDistance * 1.5f)
-    //                {
-    //                    SetState(EnemyState.Chase);
-    //                }
-    //                break;
-    //        }
-    //    }
+            case EnemyState.Chase:
+                if (distanceToPlayer > chaseDistance * 1.5f)
+                {
+                    SetState(EnemyState.Search);
+                }
+                else if (distanceToPlayer < attackDistance)
+                {
+                    SetState(EnemyState.Attack);
+                }
+                break;
 
-    //    public void SetState(EnemyState newState)
-    //    {
-    //        if (currentState == newState) return;
+            case EnemyState.Attack:
+                if (distanceToPlayer > attackDistance * 1.5f)
+                {
+                    SetState(EnemyState.Chase);
+                }
+                break;
+        }
+    }
 
-    //        previousState = currentState;
-    //        currentState = newState;
+    /// <summary>
+    ///  Set the current enemy state
+    /// </summary>
+    /// <param name="newState"></param>
+    public void SetState(EnemyState newState)
+    {
+        if (currentState == newState) return;
 
-    //        if (enemyAI != null)
-    //        {
-    //            enemyAI.OnStateChange(newState);
-    //        }
-    //    }
+        previousState = currentState;
+        currentState = newState;
 
-    //    public EnemyState GetState() => currentState;
+        //if (enemyAI != null)
+        //{
+        //    enemyAI.OnStateChange(newState);
+        //}
+    }
 
-    //    public EnemyState GetPreviousState() => previousState;
+    public void PerformAttack()
+    {
+        if (!CanAttack) return;
 
-    //    public bool CanAttack()
-    //    {
-    //        return attackCooldownRemaining <= 0;
-    //    }
+        GameObject player = Controller_Game.Instance?.GetPlayer();
+        if (player != null)
+        {
+            // Apply damage to player
+            Debug.Log("Zombie attacks player!");
+            player.GetComponent<Controller_Player>()?.TakeDamage(Mathf.RoundToInt(attackDamage));
+        }
 
-    //    public void PerformAttack()
-    //    {
-    //        if (!CanAttack()) return;
-
-    //        Transform playerTransform = Controller_Game.Instance?.GetPlayer().transform;
-    //        if (playerTransform != null)
-    //        {
-    //            // Apply damage to player
-    //            Controller_Player player = playerTransform.GetComponent<Controller_Player>();
-    //            if (player != null)
-    //            {
-    //                // You can extend PlayerController to have a TakeDamage method
-    //                Debug.Log("Zombie attacks player!");
-    //            }
-    //        }
-
-    //        attackCooldownRemaining = attackCooldown;
-    //    }
+        attackCooldownRemaining = attackCooldown;
+    }
 }
