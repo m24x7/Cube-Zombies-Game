@@ -240,17 +240,17 @@ public class EnemyController : Parent_Entity
         // Raycast at two heights to detect blocks in front of enemy
         Vector3 r1 = transform.position;
         Debug.Log("EnemyController: checking waist height block");
-        if (Physics.Raycast(r1, transform.forward, out RaycastHit hit, blockDetectionRange, LayerMask.NameToLayer("Block")))
+        if (Physics.Raycast(r1, transform.forward, out RaycastHit hit, blockDetectionRange, LayerMask.GetMask("Blocks")))
         {
-            //Debug.Log("EnemyController: detected waist height block");
+            Debug.Log("EnemyController: detected waist height block");
             return true;
         }
 
         Vector3 r2 = transform.position + transform.up;
         Debug.Log("EnemyController: checking head height block");
-        if (Physics.Raycast(r2, transform.forward, out hit, blockDetectionRange, LayerMask.NameToLayer("Block")))
+        if (Physics.Raycast(r2, transform.forward, out hit, blockDetectionRange, LayerMask.GetMask("Blocks")))
         {
-            //Debug.Log("EnemyController: detected head height block");
+            Debug.Log("EnemyController: detected head height block");
             return true;
         }
 
@@ -308,12 +308,12 @@ public class EnemyController : Parent_Entity
     {
         // Raycast at head height to detect blocks in front of enemy
         Vector3 r1 = transform.position + transform.up;
-        if (Physics.Raycast(r1, transform.forward, out RaycastHit hit, blockDetectionRange))
+        if (Physics.Raycast(r1, transform.forward, out RaycastHit hit, blockDetectionRange, LayerMask.GetMask("Blocks")))
         {
             // If we hit a block, deal damage to it
-            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Blocks"))
+            //if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Block"))
             {
-                //Debug.Log("EnemyController: Attacking head height block " + hit.collider.gameObject.name);
+                Debug.Log("EnemyController: Attacking head height block " + hit.collider.gameObject.name);
                 Parent_Block block = hit.collider.GetComponent<Parent_Block>();
                 if (block != null)
                 {
@@ -326,12 +326,12 @@ public class EnemyController : Parent_Entity
 
         // Raycast at waist height to detect blocks in front of enemy
         Vector3 r2 = transform.position;
-        if (Physics.Raycast(r2, transform.forward, out hit, blockDetectionRange))
+        if (Physics.Raycast(r2, transform.forward, out hit, blockDetectionRange, LayerMask.GetMask("Blocks")))
         {
             // If we hit a block, deal damage to it
-            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Blocks"))
+            //if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Block"))
             {
-                //Debug.Log("EnemyController: Attacking waist height block " + hit.collider.gameObject.name);
+                Debug.Log("EnemyController: Attacking waist height block " + hit.collider.gameObject.name);
                 Parent_Block block = hit.collider.GetComponent<Parent_Block>();
                 if (block != null)
                 {

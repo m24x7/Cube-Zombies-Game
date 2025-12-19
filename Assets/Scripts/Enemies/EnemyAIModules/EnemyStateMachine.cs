@@ -64,6 +64,7 @@ public class EnemyStateMachine : MonoBehaviour
                 // Transition to AttackBlock if blocks are in the path
                 if (enemyAI.BlockInPath)
                 {
+                    enemyAI.AttackCooldownRemaining = enemyAI.BlockAttackCooldown; // give attack buffer when entering block attack state
                     SetState(EnemyState.AttackBlock);
                     return;
                 }
@@ -100,6 +101,7 @@ public class EnemyStateMachine : MonoBehaviour
                 // Transition to AttackBlock if block detected in path
                 if (enemyAI.BlockInPath)
                 {
+                    enemyAI.AttackCooldownRemaining = enemyAI.BlockAttackCooldown; // give attack buffer when entering block attack state
                     SetState(EnemyState.AttackBlock);
                     return;
                 }

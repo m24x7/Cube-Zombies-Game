@@ -25767,6 +25767,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5681588492603749182, guid: 0b04181a75650824aaf6100184bac517, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5982935120111727264, guid: 0b04181a75650824aaf6100184bac517, type: 3}
       propertyPath: m_Name
       value: Player
@@ -25831,7 +25835,8 @@ PrefabInstance:
       propertyPath: inventory.Array.size
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5681588492603749182, guid: 0b04181a75650824aaf6100184bac517, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
