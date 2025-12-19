@@ -6,44 +6,26 @@ public class EnemyStateMachine : MonoBehaviour
     #region Enemy States
     public enum EnemyState
     {
-        Search,
         Chase,
-        Attack
+        AttackBlock,
+        AttackPlayer
     }
 
-    [SerializeField] private EnemyState currentState = EnemyState.Search;
+    [SerializeField] private EnemyState currentState = EnemyState.Chase;
     public EnemyState GetState => currentState;
 
     private EnemyState previousState;
     public EnemyState GetPreviousState => previousState;
     #endregion
 
-    #region Parameters
-
-    [SerializeField] private float chaseDistance = 15f;
-    public float GetChaseDistance => chaseDistance;
-
-    [SerializeField] private float attackDistance = 1.5f;
-    public float GetAttackDistance => attackDistance;
-
-    [SerializeField] private float attackCooldown = 1.5f;
-    public float GetAttackCooldown => attackCooldown;
-    public bool CanAttack => attackCooldownRemaining <= 0;
-
-    [SerializeField] private float attackDamage = 5f;
-    public float GetAttackDamage => attackDamage;
-
-    private float attackCooldownRemaining = 0f;
-    #endregion
-
-    private I_EnemyAgent enemyAI;
+    private EnemyController enemyAI;
 
     /// <summary>
     /// Start is called once before the first execution of Update after the MonoBehaviour is created
     /// </summary>
     void Start()
     {
-        enemyAI = GetComponent<I_EnemyAgent>();
+        enemyAI = GetComponent<EnemyController>();
     }
 
     /// <summary>
@@ -51,8 +33,7 @@ public class EnemyStateMachine : MonoBehaviour
     /// </summary>
     void Update()
     {
-        attackCooldownRemaining -= Time.deltaTime;
-        UpdateState();
+
     }
 
     /// <summary>
@@ -67,26 +48,22 @@ public class EnemyStateMachine : MonoBehaviour
 
         switch (currentState)
         {
-            case EnemyState.Search:
-                if (distanceToPlayer < chaseDistance)
-                {
-                    SetState(EnemyState.Chase);
-                }
-                break;
-
             case EnemyState.Chase:
-                if (distanceToPlayer > chaseDistance * 1.5f)
+                if (distanceToPlayer < enemyAI.AttackDistance)
                 {
-                    SetState(EnemyState.Search);
-                }
-                else if (distanceToPlayer < attackDistance)
-                {
-                    SetState(EnemyState.Attack);
+                    SetState(EnemyState.AttackPlayer);
                 }
                 break;
 
-            case EnemyState.Attack:
-                if (distanceToPlayer > attackDistance * 1.5f)
+            case EnemyState.AttackBlock:
+                //if (distanceToPlayer > chaseDistance)
+                //{
+                //    SetState(EnemyState.Chase);
+                //}
+                break;
+
+            case EnemyState.AttackPlayer:
+                if (distanceToPlayer > enemyAI.AttackDistance * 1.5f)
                 {
                     SetState(EnemyState.Chase);
                 }
@@ -113,16 +90,16 @@ public class EnemyStateMachine : MonoBehaviour
 
     public void PerformAttack()
     {
-        if (!CanAttack) return;
+        if (!enemyAI.CanAttack) return;
 
         GameObject player = Controller_Game.Instance?.GetPlayer();
         if (player != null)
         {
             // Apply damage to player
             Debug.Log("Zombie attacks player!");
-            player.GetComponent<Controller_Player>()?.TakeDamage(Mathf.RoundToInt(attackDamage));
+            player.GetComponent<Controller_Player>()?.TakeDamage(Mathf.RoundToInt(enemyAI.AttackDamage));
         }
 
-        attackCooldownRemaining = attackCooldown;
+        enemyAI.AttackCooldownRemaining = enemyAI.AttackCooldown;
     }
 }

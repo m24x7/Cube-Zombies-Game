@@ -5,15 +5,15 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class TestEnemyController : Parent_Entity, I_EnemyAgent
+public class EnemyController : Parent_Entity, I_EnemyAgent
 {
     #region Modules
 
     [SerializeField] private EnemyStateMachine stateMachine;
-    public EnemyStateMachine StateMachine => StateMachine;
+    public EnemyStateMachine StateMachine => stateMachine;
 
-    //[SerializeField] private EnemyMovement Movement;
-    //public EnemyMovement GetMovement => Movement;
+    [SerializeField] private EnemyMovement movement;
+    public EnemyMovement Movement => movement;
     //[SerializeField] private EnemyPerception Perception;
     //public EnemyPerception GetPerception => Perception;
     //[SerializeField] private EnemyDecisionMaking Decision;
@@ -22,13 +22,40 @@ public class TestEnemyController : Parent_Entity, I_EnemyAgent
     //public EnemyActions GetActions => Actions;
     #endregion
 
-    public static event Action<TestEnemyController> OnEntityDeath;
+    [SerializeField] private float attackDistance = 1.5f;
+    public float AttackDistance => attackDistance;
+
+    [SerializeField] private float attackCooldown = 1.5f;
+    public float AttackCooldown => attackCooldown;
+
+    private float attackCooldownRemaining = 0f;
+    public float AttackCooldownRemaining
+    {
+        get => attackCooldownRemaining;
+        set => attackCooldownRemaining = value;
+    }
+    public bool CanAttack => attackCooldownRemaining <= 0;
+
+    [SerializeField] private float attackDamage = 5f;
+    public float AttackDamage => attackDamage;
+
+
+    [SerializeField] private Transform target;
+    public Transform Target
+    {
+        get => target;
+        set => target = value;
+    }
+    public void SetTarget(Transform t) => Target = t;
+
+    public static event Action<EnemyController> OnEntityDeath;
 
     [Header("Runtime values (initialized by spawner)")]
     public EnemyDefinition definition;
     public int reward;
 
     private NavMeshAgent agent;
+    public NavMeshAgent Agent => agent;
 
     //[Header("Hit Flash")]
     [SerializeField] private HitFlash hitFlash;
@@ -42,8 +69,9 @@ public class TestEnemyController : Parent_Entity, I_EnemyAgent
 
     void Awake()
     {
+        if (stateMachine == null) stateMachine = GetComponent<EnemyStateMachine>();
+        if (movement == null) movement = GetComponent<EnemyMovement>();
         if (agent == null) agent = GetComponent<NavMeshAgent>();
-
         if (hitFlash == null) hitFlash = GetComponent<HitFlash>();
 
         hitFlash.BuildRendererCache();
@@ -59,6 +87,13 @@ public class TestEnemyController : Parent_Entity, I_EnemyAgent
         if (agent) agent.speed = def.baseSpeed * Mathf.Max(0.1f, speedMult);
 
         randSoundTimer = UnityEngine.Random.Range(0, 10);
+    }
+
+    private void Update()
+    {
+        attackCooldownRemaining -= Time.deltaTime;
+
+        StateMachine.UpdateState();
     }
 
     private void FixedUpdate()

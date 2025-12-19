@@ -1,18 +1,22 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(I_EnemyAgent))]
+[RequireComponent(typeof(EnemyController))]
 public class EnemyMovement : MonoBehaviour
 {
-    [SerializeField] private Transform target;
-    [SerializeField] private float repathInterval = 0.2f;
+    private EnemyController enemyAI;
 
-    private NavMeshAgent agent;
+    
+    [SerializeField] private float repathInterval = 0.2f;
     private float timer;
 
-    void Awake() => agent = GetComponent<NavMeshAgent>();
-
-    public void SetTarget(Transform t) => target = t;
+    /// <summary>
+    /// Start is called once before the first execution of Update after the MonoBehaviour is created
+    /// </summary>
+    void Start()
+    {
+        enemyAI = GetComponent<EnemyController>();
+    }
 
     /// <summary>
     /// Update is called once per frame
@@ -20,13 +24,13 @@ public class EnemyMovement : MonoBehaviour
     void Update()
     {
         if (Time.timeScale == 0f) return;
-        if (!target || !agent) return;
+        if (!enemyAI.Target || !enemyAI.Agent) return;
 
         timer += Time.deltaTime;
         if (timer >= repathInterval)
         {
             timer = 0f;
-            agent.SetDestination(target.position);
+            enemyAI.Agent.SetDestination(enemyAI.Target.position);
         }
     }
 }

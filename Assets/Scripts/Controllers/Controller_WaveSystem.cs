@@ -68,12 +68,12 @@ public class Controller_WaveSystem : MonoBehaviour
 
     void OnEnable()
     {
-        TestEnemyController.OnEntityDeath += HandleEnemyKilled;
+        EnemyController.OnEntityDeath += HandleEnemyKilled;
     }
 
     void OnDisable()
     {
-        TestEnemyController.OnEntityDeath -= HandleEnemyKilled;
+        EnemyController.OnEntityDeath -= HandleEnemyKilled;
     }
 
     void Start()
@@ -306,12 +306,10 @@ public class Controller_WaveSystem : MonoBehaviour
 
         //Debug.Log("Wave System: Spawning enemy " + def.id + " at " + pos);
         var go = Instantiate(def.prefab, pos, Quaternion.identity);
-        var hp = go.GetComponent<TestEnemyController>();
+        var hp = go.GetComponent<EnemyController>();
         if (!hp) { Destroy(go); return false; }
         hp.Initialize(def, healthMult, speedMult);
-
-        var chase = go.GetComponent<EnemyChasePlayer>();
-        if (chase && player) chase.SetTarget(player);
+        hp.SetTarget(player);
 
         return true;
     }
@@ -334,7 +332,7 @@ public class Controller_WaveSystem : MonoBehaviour
 
     // --- Events ---
 
-    void HandleEnemyKilled(TestEnemyController e)
+    void HandleEnemyKilled(EnemyController e)
     {
         EnemiesAlive = Mathf.Max(0, EnemiesAlive - 1);
         //if (currency) currency.Add(e.reward);

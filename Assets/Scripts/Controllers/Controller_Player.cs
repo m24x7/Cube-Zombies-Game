@@ -562,7 +562,7 @@ public class Controller_Player : Parent_Entity
 
     private void OnCollisionStay(Collision collision)
     {
-        var enemy = collision.collider.GetComponentInParent<TestEnemyController>();
+        var enemy = collision.collider.GetComponentInParent<EnemyController>();
 
         if (enemy != null && iFrames <= 0)
         {
