@@ -9,6 +9,9 @@ public class NavMeshUtils : MonoBehaviour
 
     [SerializeField] private float minUpdateInterval = 0.25f;
 
+    [SerializeField] private bool forceUpdate = false;
+    public bool ForceUpdate { set => forceUpdate = value; }
+
     // Make it a singleton for easy access
     public static NavMeshUtils Instance { get; private set; }
 
@@ -34,11 +37,15 @@ public class NavMeshUtils : MonoBehaviour
         navMeshSurface.BuildNavMesh();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    //// Update is called once per frame
+    //void Update()
+    //{
+    //    if (forceUpdate)
+    //    {
+    //        UpdateNavMesh();
+    //        forceUpdate = false;
+    //    }
+    //}
 
     public void UpdateNavMesh()
     {

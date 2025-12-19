@@ -444,10 +444,6 @@ public class Controller_Player : Parent_Entity
             if (_input.attack && inventory.InventoryItems[itemInHand].GetComponent<Item_Block>() != null)
             {
                 var blockDestroyed = BlockPlacer.TryDestroyBlockFromCamera(Camera.main, 5f, GroundLayers, LayerMask.NameToLayer("Blocks"), transform);
-                if (blockDestroyed)
-                {
-                    NavMeshUtils.Instance.UpdateNavMesh();
-                }
                 _input.attack = false;
             }
         }
@@ -610,11 +606,6 @@ public class Controller_Player : Parent_Entity
     private void placeBlock()
     {
         var placedBlock = BlockPlacer.TryPlaceBlockFromCamera(Camera.main, 5f, blockingBuildMask, blockPrefab);
-
-        if (placedBlock)
-        {
-            NavMeshUtils.Instance.UpdateNavMesh();
-        }
     }
 
     override public void Attack()

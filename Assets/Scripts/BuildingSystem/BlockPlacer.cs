@@ -38,8 +38,6 @@ public class BlockPlacer
 
         // Place a default cube (1x1x1, centered at 'snapped')
         placedBlock = GameObject.Instantiate(BlockToPlace, snapped, Quaternion.identity);
-        //placedBlock.transform.position = snapped;
-        //placedBlock.transform.localScale = Vector3.one;
 
         // Optional: put it on a dedicated layer/tag
         placedBlock.layer = LayerMask.NameToLayer("Blocks");
@@ -117,6 +115,7 @@ public class BlockPlacer
 
         // Build a ray from the center of the screen (crosshair)
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+
         // Push origin slightly forward so we don't start inside the player's collider
         ray.origin += ray.direction * 0.06f;
 
@@ -142,10 +141,7 @@ public class BlockPlacer
             // If it's on the Blocks layer, destroy it and stop
             if (col.gameObject.layer == blocksLayer)
             {
-                // If blocks are nested, destroy the top-level block object.
-                // Adjust this if your block prefab uses a different hierarchy.
-                var blockRoot = col.attachedRigidbody ? col.attachedRigidbody.gameObject : col.transform.root.gameObject;
-                Object.Destroy(blockRoot);
+                col.GetComponent<Parent_Block>().Break();
 
                 AudioSource.PlayClipAtPoint(
                     Resources.Load<AudioClip>("Sounds/footstep_grass_004"),

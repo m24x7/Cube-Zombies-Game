@@ -14,19 +14,46 @@ public class EnemyController : Parent_Entity, I_EnemyAgent
 
     [SerializeField] private EnemyMovement movement;
     public EnemyMovement Movement => movement;
-    //[SerializeField] private EnemyPerception Perception;
-    //public EnemyPerception GetPerception => Perception;
+
     //[SerializeField] private EnemyDecisionMaking Decision;
     //public EnemyDecisionMaking GetDecision => Decision;
     //[SerializeField] private EnemyActions Actions;
     //public EnemyActions GetActions => Actions;
     #endregion
 
-    [SerializeField] private float attackDistance = 1.5f;
-    public float AttackDistance => attackDistance;
+    //[SerializeField] private float attackDistance = 1.5f;
+    //public float AttackDistance => attackDistance;
 
-    [SerializeField] private float attackCooldown = 1.5f;
-    public float AttackCooldown => attackCooldown;
+    //[SerializeField] private float attackCooldown = 1.5f;
+    //public float AttackCooldown => attackCooldown;
+
+
+    [SerializeField] private float attackDamage = 5f;
+    public float AttackDamage => attackDamage;
+
+    #region Settings
+    [Header("Perception Settings")]
+    [SerializeField] private float attackRangeStart = 2f;
+    public float AttackRangeStart => attackRangeStart;
+    [SerializeField] private float rayPerceptionRange = 2f;
+    public float RayPerceptionRange => rayPerceptionRange;
+
+    [Header("AttackBlocks Settings")]
+    [SerializeField] private float blockDetectionRange = 1.5f;
+    public float BlockDetectionRange => blockDetectionRange;
+    [SerializeField] private float blockAttackDamage = 3f;
+    public float BlockAttackDamage => blockAttackDamage;
+    [SerializeField] private float blockAttackCooldown = 1f;
+    public float BlockAttackCooldown => blockAttackCooldown;
+
+    [Header("AttackPlayer Settings")]
+    [SerializeField] private float playerAttackRange = 1.5f;
+    public float PlayerAttackDistance => playerAttackRange;
+    [SerializeField] private float playerAttackDamage = 5f;
+    public float PlayerAttackDamage => playerAttackDamage;
+    [SerializeField] private float playerAttackCooldown = 1.5f;
+    public float PlayerAttackCooldown => playerAttackCooldown;
+    #endregion
 
     private float attackCooldownRemaining = 0f;
     public float AttackCooldownRemaining
@@ -34,12 +61,8 @@ public class EnemyController : Parent_Entity, I_EnemyAgent
         get => attackCooldownRemaining;
         set => attackCooldownRemaining = value;
     }
-    public bool CanAttack => attackCooldownRemaining <= 0;
 
-    [SerializeField] private float attackDamage = 5f;
-    public float AttackDamage => attackDamage;
-
-
+    #region Perception
     [SerializeField] private Transform target;
     public Transform Target
     {
@@ -47,6 +70,16 @@ public class EnemyController : Parent_Entity, I_EnemyAgent
         set => target = value;
     }
     public void SetTarget(Transform t) => Target = t;
+
+    [SerializeField] private bool blockInPath = false;
+    public bool BlockInPath
+    {
+        get => blockInPath;
+        private set => blockInPath = value;
+    }
+
+    public bool CanAttack => attackCooldownRemaining <= 0;
+    #endregion
 
     public static event Action<EnemyController> OnEntityDeath;
 
@@ -93,6 +126,10 @@ public class EnemyController : Parent_Entity, I_EnemyAgent
     {
         attackCooldownRemaining -= Time.deltaTime;
 
+        // Update perception
+        BlockInPath = IsBlockInPath();
+
+        // Update State
         StateMachine.UpdateState();
     }
 
@@ -140,4 +177,45 @@ public class EnemyController : Parent_Entity, I_EnemyAgent
             randSoundTimer = UnityEngine.Random.Range(10, 30);
         }
     }
+
+    #region Perception
+    private bool IsBlockInPath()
+    {
+        // Raycast at two heights to detect blocks in front of enemy
+        Vector3 r1 = transform.position;
+        if (Physics.Raycast(r1, transform.forward, out RaycastHit hit, blockDetectionRange))
+        {
+            return hit.collider.CompareTag("Block");
+        }
+        Vector3 r2 = transform.position + transform.up;
+        if (Physics.Raycast(r2, transform.forward, out hit, blockDetectionRange))
+        {
+            return hit.collider.CompareTag("Block");
+        }
+
+        // No blocks detected
+        return false;
+    }
+    #endregion
+
+    #region Actions
+    public void AttackBlock()
+    {
+               Debug.Log("EnemyController: Attacking Block for " + BlockAttackDamage + " damage.");
+        attackCooldownRemaining = BlockAttackCooldown;
+        // Raycast to find block in front
+        Vector3 rayOrigin = transform.position + transform.up * 0.5f;
+        if (Physics.Raycast(rayOrigin, transform.forward, out RaycastHit hit, BlockDetectionRange))
+        {
+            if (hit.collider.CompareTag("Block"))
+            {
+                Parent_Block block = hit.collider.GetComponent<Parent_Block>();
+                if (block != null)
+                {
+                    block.Break();
+                }
+            }
+        }
+    }
+    #endregion
 }
