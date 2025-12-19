@@ -143,11 +143,13 @@ public class EnemyController : Parent_Entity
         // Update State
         StateMachine.UpdateState();
 
+        // Choose Action
         StateMachine.ChooseAction();
     }
 
     private void FixedUpdate()
     {
+        // Play ambient sounds
         AmbientSounds();
     }
 
@@ -174,6 +176,9 @@ public class EnemyController : Parent_Entity
     }
     #endregion
 
+    /// <summary>
+    /// This method plays random ambient sounds at intervals.
+    /// </summary>
     private void AmbientSounds()
     {
         if (randSoundTimer > 0)
@@ -192,6 +197,10 @@ public class EnemyController : Parent_Entity
     }
 
     #region Perception
+    /// <summary>
+    /// This method checks if there is a block in front of the enemy within blockDetectionRange.
+    /// </summary>
+    /// <returns></returns>
     private bool IsBlockInPath()
     {
         // Raycast at two heights to detect blocks in front of enemy
@@ -199,7 +208,7 @@ public class EnemyController : Parent_Entity
         Debug.Log("EnemyController: checking waist height block");
         if (Physics.Raycast(r1, transform.forward, out RaycastHit hit, blockDetectionRange, LayerMask.NameToLayer("Block")))
         {
-            Debug.Log("EnemyController: detected waist height block");
+            //Debug.Log("EnemyController: detected waist height block");
             return true;
         }
 
@@ -207,7 +216,7 @@ public class EnemyController : Parent_Entity
         Debug.Log("EnemyController: checking head height block");
         if (Physics.Raycast(r2, transform.forward, out hit, blockDetectionRange, LayerMask.NameToLayer("Block")))
         {
-            Debug.Log("EnemyController: detected head height block");
+            //Debug.Log("EnemyController: detected head height block");
             return true;
         }
 
@@ -259,36 +268,40 @@ public class EnemyController : Parent_Entity
     #region Actions
     /// <summary>
     /// Attack the block in front of the enemy, if any.
-    /// First it tries to break the block at head height, then at waist height.
+    /// First it tries to damage the block at head height, then at waist height.
     /// </summary>
     public void AttackBlock()
     {
+        // Raycast at head height to detect blocks in front of enemy
         Vector3 r1 = transform.position + transform.up;
         if (Physics.Raycast(r1, transform.forward, out RaycastHit hit, blockDetectionRange))
         {
+            // If we hit a block, deal damage to it
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Blocks"))
             {
-                Debug.Log("EnemyController: Attacking head height block " + hit.collider.gameObject.name);
+                //Debug.Log("EnemyController: Attacking head height block " + hit.collider.gameObject.name);
                 Parent_Block block = hit.collider.GetComponent<Parent_Block>();
                 if (block != null)
                 {
-                    block.Break();
+                    block.TakeDamage(1);
                     attackCooldownRemaining = BlockAttackCooldown;
                     return;
                 }
             }
         }
 
+        // Raycast at waist height to detect blocks in front of enemy
         Vector3 r2 = transform.position;
         if (Physics.Raycast(r2, transform.forward, out hit, blockDetectionRange))
         {
+            // If we hit a block, deal damage to it
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Blocks"))
             {
-                Debug.Log("EnemyController: Attacking waist height block " + hit.collider.gameObject.name);
+                //Debug.Log("EnemyController: Attacking waist height block " + hit.collider.gameObject.name);
                 Parent_Block block = hit.collider.GetComponent<Parent_Block>();
                 if (block != null)
                 {
-                    block.Break();
+                    block.TakeDamage(1);
                     attackCooldownRemaining = BlockAttackCooldown;
                     return;
                 }

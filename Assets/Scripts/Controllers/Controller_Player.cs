@@ -51,9 +51,6 @@ public class Controller_Player : Parent_Entity
     private int healthLost = 0;
     public int HealthLost { get => healthLost; }
 
-
-    //public GameObject Map;
-
     #region Movement
     [Header("Player")]
     [Tooltip("Move speed of the character in m/s")]
@@ -108,9 +105,9 @@ public class Controller_Player : Parent_Entity
     private float _jumpTimeoutDelta;
     private float _fallTimeoutDelta;
 
-#if ENABLE_INPUT_SYSTEM
+    #if ENABLE_INPUT_SYSTEM
     private PlayerInput _playerInput;
-#endif
+    #endif
     private CharacterController _controller;
     private Inputs _input;
     private GameObject _mainCamera;
@@ -121,14 +118,17 @@ public class Controller_Player : Parent_Entity
     {
         get
         {
-#if ENABLE_INPUT_SYSTEM
+            #if ENABLE_INPUT_SYSTEM
             return _playerInput.currentControlScheme == "KeyboardMouse";
-#else
+            #else
 				return false;
-#endif
+            #endif
         }
     }
 
+    /// <summary>
+    /// Awake is called when the script instance is being loaded
+    /// </summary>
     private void Awake()
     {
         // get a reference to our main camera
@@ -138,21 +138,29 @@ public class Controller_Player : Parent_Entity
         }
     }
 
+    /// <summary>
+    /// This method sets up the movement of the player.
+    /// </summary>
     private void MoveStart()
     {
         _controller = GetComponent<CharacterController>();
+
         _input = GetComponent<Inputs>();
-#if ENABLE_INPUT_SYSTEM
+
+        #if ENABLE_INPUT_SYSTEM
         _playerInput = GetComponent<PlayerInput>();
-#else
+        #else
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
-#endif
+        #endif
 
         // reset our timeouts on start
         _jumpTimeoutDelta = JumpTimeout;
         _fallTimeoutDelta = FallTimeout;
     }
 
+    /// <summary>
+    /// This method updates the movement of the player.
+    /// </summary>
     private void MoveUpdate()
     {
         JumpAndGravity();
@@ -160,6 +168,9 @@ public class Controller_Player : Parent_Entity
         Move();
     }
 
+    /// <summary>
+    /// This method checks if the player is grounded.
+    /// </summary>
     private void GroundedCheck()
     {
         // set sphere position, with offset
@@ -167,6 +178,9 @@ public class Controller_Player : Parent_Entity
         Grounded = Physics.CheckSphere(spherePosition, GroundedRadius - 0.1f, GroundLayers, QueryTriggerInteraction.Ignore);
     }
 
+    /// <summary>
+    /// This method handles the camera rotation.
+    /// </summary>
     private void CameraRotation()
     {
         // if there is an input
@@ -189,6 +203,9 @@ public class Controller_Player : Parent_Entity
         }
     }
 
+    /// <summary>
+    /// This method handles the movement of the player.
+    /// </summary>
     private void Move()
     {
         // set target speed based on move speed, sprint speed and if sprint is pressed
@@ -236,6 +253,9 @@ public class Controller_Player : Parent_Entity
         _controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
     }
 
+    /// <summary>
+    /// This method handles the jump and gravity of the player.
+    /// </summary>
     private void JumpAndGravity()
     {
         if (Grounded)
@@ -284,6 +304,13 @@ public class Controller_Player : Parent_Entity
         }
     }
 
+    /// <summary>
+    /// This method clamps the angle of the camera.
+    /// </summary>
+    /// <param name="lfAngle"></param>
+    /// <param name="lfMin"></param>
+    /// <param name="lfMax"></param>
+    /// <returns></returns>
     private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
     {
         if (lfAngle < -360f) lfAngle += 360f;
@@ -291,6 +318,9 @@ public class Controller_Player : Parent_Entity
         return Mathf.Clamp(lfAngle, lfMin, lfMax);
     }
 
+    /// <summary>
+    /// This method draws gizmos to indicate whether the player is grounded.
+    /// </summary>
     private void OnDrawGizmosSelected()
     {
         Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
@@ -304,7 +334,9 @@ public class Controller_Player : Parent_Entity
     }
     #endregion
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    /// <summary>
+    /// Start is called once before the first execution of Update after the MonoBehaviour is created
+    /// </summary>
     void Start()
     {
         MoveStart();
@@ -314,9 +346,12 @@ public class Controller_Player : Parent_Entity
         InitializeBasicInventory();
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Update is called once per frame
+    /// </summary>
     void Update()
     {
+        // Handle Pause Menu
         if (_input.pauseGame)
         {
             if (uiManager != null)
@@ -326,17 +361,21 @@ public class Controller_Player : Parent_Entity
             }
         }
 
+        // Handle Instructions Menu
         if (_input.instructions)
         {
             uiManager.ToggleInstructions();
             _input.instructions = false;
         }
 
+        // Prevent updates when game is paused
         if (Time.timeScale == 0f) return;
 
+        // Handle Movement
         MoveUpdate();
 
         // Handle Inputs
+        #region
         if (_input.swapSword)
         {
             itemInHand = 0;
@@ -447,7 +486,9 @@ public class Controller_Player : Parent_Entity
                 _input.attack = false;
             }
         }
+        #endregion
 
+        // Handle Item in Hand Visuals
         switch (itemInHand)
         {
             case 0:
@@ -525,23 +566,37 @@ public class Controller_Player : Parent_Entity
         }
     }
 
+    /// <summary>
+    /// LateUpdate is called at the end of every frame
+    /// </summary>
     private void LateUpdate()
     {
+        // Prevent updates when game is paused
         if (Time.timeScale == 0f) return;
+
+        // Handle Camera Rotation
         CameraRotation();
     }
 
+    /// <summary>
+    /// FixedUpdate is called at a fixed interval and is independent of frame rate
+    /// </summary>
     void FixedUpdate()
     {
-        if (iFrames > 0)
-            iFrames--;
+        // Prevent updates when game is paused
+        if (Time.timeScale == 0f) return;
 
+        // Handle Invincibility Frames
+        if (iFrames > 0) iFrames--;
+
+        // Handle Attack Cooldown
         if (attackCooldown > 0)
         {
             attackCooldown--;
             //Debug.Log("Attack cooldown: " + attackCooldown);
         }
 
+        // Handle Health Regeneration
         if (regenWaitTimer > 0f)
         {
             regenWaitTimer -= Time.fixedDeltaTime;
@@ -556,24 +611,40 @@ public class Controller_Player : Parent_Entity
         }
     }
 
+    /// <summary>
+    /// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionStay(Collision collision)
     {
+        // Check if collided with an enemy
         var enemy = collision.collider.GetComponentInParent<EnemyController>();
 
+        // If collided with enemy and not in invincibility frames, take damage
         if (enemy != null && iFrames <= 0)
         {
-            // Take damage over time while in contact with enemy
             TakeDamage(10);
         }
     }
 
+    /// <summary>
+    /// This method heals the player and invokes the OnHealthChange event.
+    /// </summary>
+    /// <param name="heal"></param>
     override public void Heal(int heal)
     {
+        // Call base Heal method
         base.Heal(heal);
 
+        // Notify health change
         OnHealthChange?.Invoke();
     }
 
+    /// <summary>
+    /// This method applies damage to the player, handles invincibility frames, and invokes the OnHealthChange event.
+    /// </summary>
+    /// <param name="damage"></param>
+    /// <param name="ignoreInvincibility"></param>
     override public void TakeDamage(int damage, bool ignoreInvincibility = false)
     {
         // if currently in invincibility frames, ignore damage
@@ -598,65 +669,98 @@ public class Controller_Player : Parent_Entity
         if (health.Cur <= 0) Die();
     }
 
+    /// <summary>
+    /// This method handles the player's death and invokes the playerDie event.
+    /// </summary>
     override protected void Die()
     {
         playerDie?.Invoke();
     }
 
+    /// <summary>
+    /// This method places a block in the world using the BlockPlacer utility.
+    /// </summary>
     private void placeBlock()
     {
         var placedBlock = BlockPlacer.TryPlaceBlockFromCamera(Camera.main, 5f, blockingBuildMask, blockPrefab);
     }
 
+    /// <summary>
+    /// This method handles the player's attack logic using raycasting.
+    /// </summary>
     override public void Attack()
     {
+        // Create a ray from the camera's position forward
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
 
         // 1) Precise thin ray first (long-range)
-        if (TryHitScan(ray, inventory.InventoryItems[itemInHand].GetComponent<Item_Weapon_Melee>().Range, 0f, out var hit))
+        if (TryHitScan(ray, inventory.InventoryItems[itemInHand].GetComponent<Item_Weapon_Melee>().Range, out var hit))
         {
             ApplyHit(hit);
             return;
         }
 
-        // 2) Close-range assist (small sphere) if the thin ray missed
-        if (TryHitScan(ray, inventory.InventoryItems[itemInHand].GetComponent<Item_Weapon_Melee>().Range, closeAssistRadius, out hit))
-        {
-            ApplyHit(hit);
-            return;
-        }
+        //// 2) Close-range assist (small sphere) if the thin ray missed
+        //if (TryHitScan(ray, inventory.InventoryItems[itemInHand].GetComponent<Item_Weapon_Melee>().Range, closeAssistRadius, out hit))
+        //{
+        //    ApplyHit(hit);
+        //    return;
+        //}
 
         // No hit
     }
 
-    private bool TryHitScan(Ray ray, float range, float radius, out RaycastHit firstValid)
+    /// <summary>
+    /// This method performs a hitscan using raycasting to detect enemies.
+    /// </summary>
+    /// <param name="ray"></param>
+    /// <param name="range"></param>
+    /// <param name="firstValid"></param>
+    /// <returns></returns>
+    private bool TryHitScan(Ray ray, float range, out RaycastHit firstValid)
     {
         firstValid = default;
 
+        // Perform raycast
         Physics.Raycast(ray, out RaycastHit hit, range, ~0, QueryTriggerInteraction.Ignore);
 
+        // Check if hit an enemy
         if (hit.collider != null)
         {
+            // Get the root GameObject of the hit transform
             var objectHit = hit.transform.root.gameObject;
             if (objectHit.layer == LayerMask.NameToLayer("Enemies"))
             {
+                // Valid hit
                 firstValid = hit;
                 return true;
             }
         }
 
+        // No valid hit
         return false;
     }
 
+    /// <summary>
+    /// This method applies damage to the hit enemy.
+    /// </summary>
+    /// <param name="hit"></param>
     private void ApplyHit(RaycastHit hit)
     {
+        // Get the Parent_Entity component from the hit collider's parent
         var enemy = hit.collider.GetComponentInParent<Parent_Entity>();
+
+        // Apply damage to the enemy
         if (enemy != null)
             enemy.TakeDamage(inventory.InventoryItems[itemInHand].GetComponent<Item_Weapon_Melee>() != null ? inventory.InventoryItems[itemInHand].GetComponent<Item_Weapon_Melee>().Damage : 10);
     }
 
+    /// <summary>
+    /// This method initializes the player's inventory with basic items if empty.
+    /// </summary>
     private void InitializeBasicInventory()
     {
+        // Check if inventory is empty
         if (inventory.InventoryItems.Count == 0)
         {
             // Instantiate a default sword and block if none exist in inventory
@@ -664,6 +768,7 @@ public class Controller_Player : Parent_Entity
             var swordObject = Instantiate(basicSword.prefab, transform.Find("MainCamera/Armature/AttatchPoint"));
             inventory.AddItem(swordObject);
 
+            // Instantiate a default block
             var basicBlock = Resources.Load<GameObject>("Blocks/Block");
             var blockObject = Instantiate(basicBlock, transform.Find("MainCamera/Armature/AttatchPoint"));
             blockObject.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
